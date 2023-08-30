@@ -7,7 +7,7 @@ export const channelsList = [
       channelTitle: "First search channel result",
       thumbnails: {
         default: {
-          url: "https://www.creativefabrica.com/wp-content/uploads/2022/07/11/YouTube-Thumbnail-Design-Web-Banner-Graphics-33987580-1.jpg",
+          url: "/image.jpg",
         },
       },
     },
@@ -20,7 +20,7 @@ export const channelsList = [
       channelTitle: "Second search channel result",
       thumbnails: {
         default: {
-          url: "https://www.creativefabrica.com/wp-content/uploads/2022/07/11/YouTube-Thumbnail-Design-Web-Banner-Graphics-33987580-1.jpg",
+          url: "/image.jpg",
         },
       },
     },
@@ -33,7 +33,7 @@ export const channelsList = [
       channelTitle: "Third search channel result",
       thumbnails: {
         default: {
-          url: "https://www.creativefabrica.com/wp-content/uploads/2022/07/11/YouTube-Thumbnail-Design-Web-Banner-Graphics-33987580-1.jpg",
+          url: "/image.jpg",
         },
       },
     },
@@ -46,7 +46,7 @@ export const channelsList = [
       channelTitle: "Forth search channel result",
       thumbnails: {
         default: {
-          url: "https://www.creativefabrica.com/wp-content/uploads/2022/07/11/YouTube-Thumbnail-Design-Web-Banner-Graphics-33987580-1.jpg",
+          url: "/image.jpg",
         },
       },
     },
@@ -59,7 +59,7 @@ export const channelsList = [
       channelTitle: "Fifth search channel result",
       thumbnails: {
         default: {
-          url: "https://www.creativefabrica.com/wp-content/uploads/2022/07/11/YouTube-Thumbnail-Design-Web-Banner-Graphics-33987580-1.jpg",
+          url: "/image.jpg",
         },
       },
     },
@@ -72,7 +72,7 @@ export const channelsList = [
       channelTitle: "Sixth search channel result",
       thumbnails: {
         default: {
-          url: "https://www.creativefabrica.com/wp-content/uploads/2022/07/11/YouTube-Thumbnail-Design-Web-Banner-Graphics-33987580-1.jpg",
+          url: "/image.jpg",
         },
       },
     },
@@ -85,7 +85,7 @@ export const channelsList = [
       channelTitle: "Seventh search channel result",
       thumbnails: {
         default: {
-          url: "https://www.creativefabrica.com/wp-content/uploads/2022/07/11/YouTube-Thumbnail-Design-Web-Banner-Graphics-33987580-1.jpg",
+          url: "/image.jpg",
         },
       },
     },
