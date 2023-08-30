@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { channelsList } from "./../mock";
 
+const config = useRuntimeConfig();
+
 const props = defineProps({
   user: Object as any,
   activeWeek: Object as any,
@@ -59,7 +61,7 @@ function addOrRemoveChannel(channel: any) {
 async function getData() {
   if (input.value) {
     // let req: any = await $fetch(
-    //   `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${input.value}&key=AIzaSyC7Rk-T-DVGska57yIO08jq3j9hWnY17vU`
+    //   `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${input.value}&key=${config.public.GOOGLE_KEY}`
     // );
     // searchResults.value = req.items;
     setTimeout(() => {

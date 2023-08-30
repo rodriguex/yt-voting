@@ -12,4 +12,9 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false,
   },
+  runtimeConfig: {
+    public: {
+      GOOGLE_KEY: process.env.GOOGLE_KEY,
+    },
+  },
 });
