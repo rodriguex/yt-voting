@@ -1,34 +1,24 @@
 <script lang="ts" setup>
 import { channelsList } from "./../mock";
 
-const config = useRuntimeConfig();
-
 const props = defineProps({
   user: Object as any,
   activeWeek: Object as any,
   isWeekActive: Boolean,
   alreadyVoted: Boolean,
   isUserSignedIn: Boolean,
-  loading: Boolean,
 });
 
-const emits = defineEmits(["alreadyVoted"]);
+const emits = defineEmits(["setAlreadyVoted"]);
 const supabase: any = useSupabaseClient();
 
 const input = ref("");
 const searchResults: any = ref([]);
 const choosenChannels: any = ref([]);
-const alreadyVotedValue = ref(true);
 
 watch(input, () => {
   if (!input.value) {
     searchResults.value = [];
-  }
-});
-
-watchEffect(() => {
-  if (!props.loading) {
-    alreadyVotedValue.value = props.alreadyVoted;
   }
 });
 
@@ -84,23 +74,17 @@ async function vote() {
 
   let insert = await supabase.from("votes").insert(data).select();
   if (insert.status === 201) {
-    alreadyVotedValue.value = true;
-    emits("alreadyVoted", true);
+    emits("setAlreadyVoted", true);
   }
 }
 </script>
 
 <template>
   <div>
-    <span
-      v-if="props.loading"
-      class="w-full h-screen flex items-center justify-center font-bold text-4xl"
-      >Loading...</span
-    >
-
     <div
-      v-else-if="!isUserSignedIn"
-      class="w-full h-screen flex flex-col items-center justify-center font-bold text-4xl"
+      v-if="!isUserSignedIn"
+      class="w-full flex flex-col items-center justify-center font-bold text-4xl"
+      style="height: calc(100vh - 100px)"
     >
       <h2>Please, sign in to be able to vote</h2>
       <button
@@ -112,15 +96,8 @@ async function vote() {
       </button>
     </div>
 
-    <h2
-      v-else-if="alreadyVotedValue"
-      class="w-full h-screen flex items-center justify-center mb-5 font-bold text-4xl"
-    >
-      Your votes were computed! You can see the results here
-    </h2>
-
     <div
-      v-else-if="!loading && !alreadyVotedValue && isWeekActive"
+      v-else-if="!alreadyVoted && isWeekActive"
       class="gap-10 py-5 w-full flex"
     >
       <div class="flex flex-col w-full max-w-3xl">
@@ -208,9 +185,18 @@ async function vote() {
       </div>
     </div>
 
+    <h2
+      v-else-if="alreadyVoted"
+      class="w-full flex items-center justify-center mb-5 font-bold text-4xl"
+      style="height: calc(100vh - 100px)"
+    >
+      Your votes were computed! You can see the results here
+    </h2>
+
     <h1
       v-else
-      class="w-full h-screen flex items-center justify-center font-bold text-5xl"
+      class="w-full flex items-center justify-center font-bold text-5xl"
+      style="height: calc(100vh - 100px)"
     >
       This week is not active for voting, try next week.
     </h1>
