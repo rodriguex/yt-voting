@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-defineProps({ data: Array as any });
+defineProps({ weekVotes: Array as any });
 </script>
 
 <template>
   <div class="flex flex-wrap gap-6 mt-10">
     <div
-      v-for="d in data"
-      :key="data.id"
+      v-for="d in weekVotes"
+      :key="d.id"
       class="w-[300px] rounded-md flex flex-col shadow-md"
     >
       <div class="flex flex-col gap-2">

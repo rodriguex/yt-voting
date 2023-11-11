@@ -2,7 +2,7 @@
 const supabase: any = useSupabaseClient();
 const supabaseUser: any = useSupabaseUser();
 
-const data: any = ref([]);
+const weekVotes: any = ref([]);
 
 const user: any = ref(null);
 const activeWeek: any = ref(null);
@@ -149,7 +149,7 @@ async function getActiveWeekVotes(activeWeekId: number) {
     .select("yt_username, yt_thumb")
     .eq("week_id", activeWeekId);
 
-  data.value = sortVotes(getVotes.data);
+  weekVotes.value = sortVotes(getVotes.data);
 
   supabase
     .channel("custom-insert-channel")
@@ -157,16 +157,16 @@ async function getActiveWeekVotes(activeWeekId: number) {
       "postgres_changes",
       { event: "INSERT", schema: "public", table: "votes" },
       (payload: any) => {
-        let index = data.value.findIndex(
+        let index = weekVotes.value.findIndex(
           (result: any) =>
             result.yt_username === payload.new.yt_username && result.count
         );
 
         if (index !== -1) {
-          data.value[index].count++;
+          weekVotes.value[index].count++;
         } else {
-          data.value = [
-            ...data.value,
+          weekVotes.value = [
+            ...weekVotes.value,
             {
               yt_username: payload.new.yt_username,
               yt_thumb: payload.new.yt_thumb,
@@ -232,7 +232,7 @@ async function addNewUser() {
         :isWeekActive="isWeekActive"
         :alreadyVoted="alreadyVoted"
         :isUserSignedIn="isUserSignedIn"
-        :data="data"
+        :weekVotes="weekVotes"
         @setAlreadyVoted="setAlreadyVoted"
       />
     </main>

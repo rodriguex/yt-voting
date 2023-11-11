@@ -186,19 +186,22 @@ async function vote() {
     </div>
 
     <h2
-      v-else-if="alreadyVoted"
+      v-else-if="alreadyVoted && isWeekActive"
       class="w-full flex items-center justify-center mb-5 font-bold text-4xl"
       style="height: calc(100vh - 100px)"
     >
-      Your votes were computed! You can see the results here
+      <Countdown
+        message="Countdown for the end of this voting week:"
+        :endCountdown="new Date(activeWeek.ending)"
+      />
     </h2>
 
     <h1
-      v-else
+      v-else-if="!isWeekActive"
       class="w-full flex items-center justify-center font-bold text-5xl"
       style="height: calc(100vh - 100px)"
     >
-      This week is not active for voting, try next week.
+      <Countdown message="Countdown for the next voting week:" />
     </h1>
   </div>
 </template>
