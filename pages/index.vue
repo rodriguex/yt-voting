@@ -4,6 +4,7 @@ import { channelsList } from "./../mock";
 const props = defineProps({
   user: Object as any,
   activeWeek: Object as any,
+  nextActiveWeek: Object as any,
   isWeekActive: Boolean,
   alreadyVoted: Boolean,
   isUserSignedIn: Boolean,
@@ -196,12 +197,15 @@ async function vote() {
       />
     </h2>
 
-    <h1
-      v-else-if="!isWeekActive"
+    <h2
+      v-else-if="!isWeekActive && nextActiveWeek"
       class="w-full flex items-center justify-center font-bold text-5xl"
       style="height: calc(100vh - 100px)"
     >
-      <Countdown message="Countdown for the next voting week:" />
-    </h1>
+      <Countdown
+        message="Countdown for the next voting week:"
+        :endCountdown="new Date(nextActiveWeek.beginning)"
+      />
+    </h2>
   </div>
 </template>

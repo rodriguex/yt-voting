@@ -6,6 +6,7 @@ const weekVotes: any = ref([]);
 
 const user: any = ref(null);
 const activeWeek: any = ref(null);
+const nextActiveWeek: any = ref(null);
 
 const isWeekActive = ref(true);
 const alreadyVoted = ref(false);
@@ -27,28 +28,21 @@ watchEffect(async () => {
       let getActiveWeekFromDB = await getActiveWeek();
       if (getActiveWeekFromDB) {
         activeWeek.value = getActiveWeekFromDB;
-        if (
-          isActiveWeekThisWeek(
-            getActiveWeekFromDB.beginning,
-            getActiveWeekFromDB.ending
-          )
-        ) {
-          isWeekActive.value = true;
+        isWeekActive.value = true;
 
-          await getActiveWeekVotes(activeWeek.value.id);
+        await getActiveWeekVotes(activeWeek.value.id);
 
-          let getUserVotesFromDb = await getUserVotes(
-            getActiveWeekFromDB.id,
-            user.value.id
-          );
-          if (getUserVotesFromDb >= 5) {
-            alreadyVoted.value = true;
-          }
-        } else {
-          isWeekActive.value = false;
+        let getUserVotesFromDb = await getUserVotes(
+          getActiveWeekFromDB.id,
+          user.value.id
+        );
+
+        if (getUserVotesFromDb >= 5) {
+          alreadyVoted.value = true;
         }
       } else {
         isWeekActive.value = false;
+        nextActiveWeek.value = await getNextActiveWeek();
       }
     } else {
       let saveUser = await addNewUser();
@@ -91,6 +85,15 @@ async function getActiveWeek() {
     .eq("active", true);
 
   return getActiveWeek.data.length ? getActiveWeek.data[0] : null;
+}
+
+async function getNextActiveWeek() {
+  let getNextActiveWeek: any = await supabase
+    .from("weeks")
+    .select("*")
+    .eq("is_next_active_week", true);
+
+  return getNextActiveWeek.data.length ? getNextActiveWeek.data[0] : null;
 }
 
 function isActiveWeekThisWeek(
@@ -229,6 +232,7 @@ async function addNewUser() {
         v-if="!loading"
         :user="user"
         :activeWeek="activeWeek"
+        :nextActiveWeek="nextActiveWeek"
         :isWeekActive="isWeekActive"
         :alreadyVoted="alreadyVoted"
         :isUserSignedIn="isUserSignedIn"

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { DEFAULT_INSPECTOR_OPTIONS } from "vite-plugin-vue-inspector";
-
 const props = defineProps({
   message: { type: String },
   endCountdown: { type: Date },
@@ -11,22 +9,18 @@ const countdown = ref("");
 onMounted(() => {
   setInterval(() => {
     if (props.endCountdown) {
-      let currentDate = new Date();
-
-      let countHours = props.endCountdown.getHours();
-      let countMin = props.endCountdown.getMinutes();
-
-      let currentHours = currentDate.getHours();
-      let currentMin = currentDate.getMinutes();
-      let currentSec = currentDate.getSeconds();
-
-      let diffHours = countHours - currentHours;
-      let diffMin = countMin - currentMin;
-      let diffSec = 59 - currentSec;
-
-      countdown.value = `${diffHours.toString().padStart(2, "0")}:${diffMin
+      let diff = props.endCountdown.getTime() - new Date().getTime();
+      let [days, hours] = (diff / (1000 * 60 * 60 * 24)).toString().split(".");
+      let hoursMinutes = ((parseInt(hours) / 100) * 24).toString();
+      let h = hoursMinutes.slice(0, 2);
+      let m = ((parseInt(hoursMinutes.slice(2, 5)) / 1000) * 60)
         .toString()
-        .padStart(2, "0")}:${diffSec.toString().padStart(2, "0")}`;
+        .split(".");
+      let currentSec = 59 - new Date().getSeconds();
+
+      countdown.value = `${days} days, ${h} hours, ${
+        m[0]
+      } minutes and ${currentSec.toString().padStart(2, "0")} seconds`;
     }
   }, 1000);
 });
