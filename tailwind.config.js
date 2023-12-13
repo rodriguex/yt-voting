@@ -10,6 +10,10 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      gloria: ["Gloria Hallelujah", "cursive"],
+      dmSans: ["DM Sans", "cursive"],
+    },
   },
   plugins: [],
 };

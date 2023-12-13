@@ -7,20 +7,21 @@ defineProps({ weekVotes: Array as any });
     <div
       v-for="d in weekVotes"
       :key="d.id"
-      class="w-[300px] rounded-md flex flex-col shadow-md"
+      class="w-[300px] rounded-lg flex flex-col shadow-md"
     >
-      <div class="flex flex-col gap-2">
-        <span class="p-4 font-bold text-lg">{{ d.yt_username }}</span>
-        <img
-          class="w-full h-full"
-          referrerpolicy="no-referrer"
-          :src="d.yt_thumb"
-        />
-      </div>
+      <img
+        class="w-full h-full rounded-lg"
+        referrerpolicy="no-referrer"
+        alt="Username pic"
+        :src="d.yt_thumb"
+      />
 
-      <span class="p-4 mt-5 font-bold text-2xl">{{
-        `${d.count} ${d.count === 1 ? "vote" : "votes"}`
-      }}</span>
+      <div class="p-3 flex flex-col gap-2 rounded-lg">
+        <span class="text-lg">{{ d.yt_username }}</span>
+        <span class="mt-2 font-bold text-2xl">{{
+          `${d.count} ${d.count === 1 ? "vote" : "votes"}`
+        }}</span>
+      </div>
     </div>
   </div>
 </template>

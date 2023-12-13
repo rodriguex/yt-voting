@@ -81,20 +81,23 @@ async function vote() {
 </script>
 
 <template>
-  <div>
-    <div
-      v-if="!isUserSignedIn"
-      class="w-full flex flex-col items-center justify-center font-bold text-4xl"
-      style="height: calc(100vh - 100px)"
-    >
-      <h2>Please, sign in to be able to vote</h2>
-      <button
-        v-if="!user"
-        class="w-36 h-fit mt-8 rounded border p-3"
-        @click="loginWithGoogle"
-      >
-        Google
-      </button>
+  <div class="h-full">
+    <div v-if="!isUserSignedIn" class="w-full h-full flex">
+      <div
+        class="bg-[url('beast.jpg')] w-[50%] bg-cover bg-center bg-no-repeat"
+      ></div>
+      <div class="bg-[#ad4444] flex flex-col items-center justify-center">
+        <h2 class="w-[70%] text-center text-6xl">
+          Vote for the best youtubers of the week!
+        </h2>
+        <button
+          v-if="!user"
+          class="font-bold text-2xl font-dmSans mt-16 border-2 p-5 rounded-lg"
+          @click="loginWithGoogle"
+        >
+          Login with Google
+        </button>
+      </div>
     </div>
 
     <div
@@ -110,7 +113,7 @@ async function vote() {
             <label for="input">Search for channels</label>
             <input
               id="search"
-              class="w-full focus:outline-none p-6 shadow rounded-md text-2xl"
+              class="text-black w-full focus:outline-none p-6 shadow rounded-md text-2xl"
               v-model="input"
               autofocus
             />
@@ -135,6 +138,7 @@ async function vote() {
             <img
               class="w-[160px] h-full"
               referrerpolicy="no-referrer"
+              alt="Youtuber picture"
               :src="result?.snippet?.thumbnails?.default?.url"
             />
 
@@ -143,7 +147,7 @@ async function vote() {
                 result?.snippet?.channelTitle
               }}</span>
 
-              <span>{{
+              <span class="text-black">{{
                 isInList(result.id.channelId) ? "Remove" : "Add"
               }}</span>
             </div>
@@ -159,9 +163,7 @@ async function vote() {
           class="w-full flex justify-between items-center gap-4 shadow p-4 rounded"
           :key="result.id.channelId"
         >
-          <span class="text-xl text-black">{{
-            result.snippet.channelTitle
-          }}</span>
+          <span class="text-xl">{{ result.snippet.channelTitle }}</span>
           <span
             class="cursor-pointer text-red-600"
             @click="addOrRemoveChannel(result)"
@@ -171,7 +173,7 @@ async function vote() {
 
         <button
           v-if="choosenChannels.length === 5 && user"
-          class="cursor-pointer shadow base shadow-black p-5 mt-5 font-bold text-xl bg-black text-white w-[250px] rounded-lg"
+          class="cursor-pointer shadow base shadow-black p-5 mt-5 font-bold text-xl bg-black w-[250px] rounded-lg"
           @click="vote"
         >
           Vote

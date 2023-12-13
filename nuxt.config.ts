@@ -17,4 +17,19 @@ export default defineNuxtConfig({
       GOOGLE_KEY: process.env.GOOGLE_KEY,
     },
   },
+  app: {
+    head: {
+      link: [
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&family=Gloria+Hallelujah&display=swap",
+        },
+      ],
+    },
+  },
 });

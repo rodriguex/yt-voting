@@ -96,27 +96,6 @@ async function getNextActiveWeek() {
   return getNextActiveWeek.data.length ? getNextActiveWeek.data[0] : null;
 }
 
-function isActiveWeekThisWeek(
-  activeWeekBeginning: string,
-  activeWeekEnding: string
-) {
-  let beginning = activeWeekBeginning;
-  let ending = activeWeekEnding;
-
-  let date = new Date();
-  let today = `${date.getFullYear()}-${(date.getMonth() + 1)
-    .toString()
-    .padStart(2, "0")}-${date
-    .getDate()
-    .toString()
-    .padStart(
-      2,
-      "0"
-    )}T${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-
-  return today >= beginning && today < ending;
-}
-
 function sortVotes(votes: any) {
   let results: any = [];
 
@@ -209,25 +188,8 @@ async function addNewUser() {
 </script>
 
 <template>
-  <div>
-    <header class="w-full p-2 shadow">
-      <div class="h-[60px] max-w-7xl m-auto flex items-center justify-between">
-        <div class="flex items-center gap-8">
-          <NuxtLink to="/" class="text-xl">Home</NuxtLink>
-          <NuxtLink to="/results" class="text-xl">Results</NuxtLink>
-        </div>
-
-        <img
-          v-if="user"
-          class="cursor-pointer rounded-full w-16"
-          referrerpolicy="no-referrer"
-          :src="user.picture"
-          @click="logout"
-        />
-      </div>
-    </header>
-
-    <main class="w-full max-w-7xl m-auto">
+  <div class="w-full h-full">
+    <main class="h-full">
       <NuxtPage
         v-if="!loading"
         :user="user"
