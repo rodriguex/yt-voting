@@ -60,10 +60,6 @@ function setAlreadyVoted(value: boolean) {
   alreadyVoted.value = value;
 }
 
-async function logout() {
-  await supabase.auth.signOut();
-}
-
 async function getUser() {
   if (!supabaseUser.value) {
     user.value = null;

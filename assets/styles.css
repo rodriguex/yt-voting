@@ -2,10 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background: #dfdfdf2b;
+}
+
 html,
 body,
 #__nuxt {
   height: 100%;
-  color: white;
-  font-family: "Gloria Hallelujah", cursive;
+  color: black;
+  font-family: "DM Sans", cursive;
 }

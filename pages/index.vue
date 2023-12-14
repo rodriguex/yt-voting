@@ -49,6 +49,10 @@ function addOrRemoveChannel(channel: any) {
   }
 }
 
+async function logout() {
+  await supabase.auth.signOut();
+}
+
 async function getData() {
   if (input.value) {
     // let req: any = await $fetch(
@@ -84,61 +88,64 @@ async function vote() {
   <div class="h-full">
     <div v-if="!isUserSignedIn" class="w-full h-full flex">
       <div
-        class="bg-[url('beast.jpg')] w-[50%] bg-cover bg-center bg-no-repeat"
+        class="bg-[url('beast.jpg')] w-[45%] bg-cover bg-center bg-no-repeat"
       ></div>
-      <div class="bg-[#ad4444] flex flex-col items-center justify-center">
-        <h2 class="w-[70%] text-center text-6xl">
-          Vote for the best youtubers of the week!
+      <div class="text-white crazyBg flex flex-col items-center justify-center">
+        <h2 class="font-gloria w-[70%] text-center text-6xl">
+          Vote for the best youtuber of the week!
         </h2>
         <button
           v-if="!user"
-          class="font-bold text-2xl font-dmSans mt-16 border-2 p-5 rounded-lg"
+          class="font-bold flex items-center gap-2 text-2xl font-dmSans mt-16 border-2 p-5 rounded-lg"
           @click="loginWithGoogle"
         >
-          Login with Google
+          <img class="w-10" src="googleLogo.png" alt="" />
+          <span>Login with Google</span>
         </button>
       </div>
     </div>
 
-    <div
-      v-else-if="!alreadyVoted && isWeekActive"
-      class="gap-10 py-5 w-full flex"
-    >
-      <div class="flex flex-col w-full max-w-3xl">
-        <form
-          class="flex items-center gap-8 justify-center"
-          @submit.prevent="getData"
-        >
-          <div class="flex flex-col gap-2 grow">
-            <label for="input">Search for channels</label>
-            <input
-              id="search"
-              class="text-black w-full focus:outline-none p-6 shadow rounded-md text-2xl"
-              v-model="input"
-              autofocus
-            />
+    <div v-else-if="!alreadyVoted && isWeekActive">
+      <div class="flex flex-col w-full max-w-5xl m-auto pb-20">
+        <form class="mt-8" @submit.prevent="getData">
+          <div class="flex flex-col gap-2">
+            <span
+              class="cursor-pointer font-bold mb-5 text-gray-500"
+              @click="logout"
+              >Logout</span
+            >
+            <label
+              for="input"
+              class="border-b-4 pb-4 w-fit border-double border-[#40c7a3] text-3xl mb-7 font-gloria"
+              >Find your favorite youtuber here and leave your vote!</label
+            >
+            <div class="flex items-center gap-5">
+              <input
+                id="input"
+                class="shadow placeholder:font-gloria w-full focus:outline-none p-7 rounded-lg text-2xl"
+                v-model="input"
+                placeholder="Mr.Beast..."
+              />
+              <button
+                class="crazyBg text-white shadow p-6 w-[200px] text-xl rounded-lg font-bold"
+              >
+                Search
+              </button>
+            </div>
           </div>
-          <button class="shadow-md p-5 w-[200px] mt-8 text-2xl rounded-lg">
-            Search
-          </button>
         </form>
 
         <div v-if="searchResults.length" class="mt-10 flex flex-wrap gap-5">
           <div
             v-for="result in searchResults"
-            class="flex w-full max-w-[370px] items-center gap-3 rounded-md shadow"
+            class="flex bg-white flex-col w-full max-w-[320px] h-[370px] items-center gap-2 relative rounded-lg shadow"
             :key="result?.id?.channelId"
-            :class="[
-              choosenChannels.length === 5 && !isInList(result.id.channelId)
-                ? 'cursor-not-allowed bg-gray-200 '
-                : 'cursor-pointer bg-white',
-            ]"
             @click="addOrRemoveChannel(result)"
           >
             <img
-              class="w-[160px] h-full"
               referrerpolicy="no-referrer"
               alt="Youtuber picture"
+              class="rounded-lg"
               :src="result?.snippet?.thumbnails?.default?.url"
             />
 
@@ -146,17 +153,19 @@ async function vote() {
               <span class="font-bold text-xl text-black">{{
                 result?.snippet?.channelTitle
               }}</span>
-
-              <span class="text-black">{{
-                isInList(result.id.channelId) ? "Remove" : "Add"
-              }}</span>
             </div>
+
+            <button
+              class="cursor-pointer border-2 border-black p-2 font-bold w-[90%] rounded-lg text-xl text-black absolute bottom-5"
+            >
+              Vote
+            </button>
           </div>
         </div>
       </div>
 
-      <div class="grow flex flex-col gap-3">
-        <span>My voting list</span>
+      <div class="flex flex-col gap-3 w-full max-w-4xl m-auto">
+        <span v-if="choosenChannels.length" class="mt-5">My voting list</span>
 
         <div
           v-for="result in choosenChannels"
@@ -211,3 +220,9 @@ async function vote() {
     </h2>
   </div>
 </template>
+
+<style scoped>
+.crazyBg {
+  background-image: linear-gradient(45deg, #274c37, #00316f);
+}
+</style>
