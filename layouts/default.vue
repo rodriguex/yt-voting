@@ -32,14 +32,14 @@ watchEffect(async () => {
 
         await getActiveWeekVotes(activeWeek.value.id);
 
-        let getUserVotesFromDb = await getUserVotes(
-          getActiveWeekFromDB.id,
-          user.value.id
-        );
+        // let getUserVotesFromDb = await getUserVotes(
+        //   getActiveWeekFromDB.id,
+        //   user.value.id
+        // );
 
-        if (getUserVotesFromDb >= 5) {
-          alreadyVoted.value = true;
-        }
+        // if (getUserVotesFromDb >= 5) {
+        //   alreadyVoted.value = true;
+        // }
       } else {
         isWeekActive.value = false;
         nextActiveWeek.value = await getNextActiveWeek();
@@ -57,7 +57,7 @@ watchEffect(async () => {
 });
 
 function setAlreadyVoted(value: boolean) {
-  alreadyVoted.value = value;
+  // alreadyVoted.value = value;
 }
 
 async function getUser() {
@@ -117,8 +117,7 @@ function sortVotes(votes: any) {
     }
   });
 
-  results.sort((a: any, b: any) => b.count - a.count);
-  return results;
+  return results.sort((a: any, b: any) => b.count - a.count);
 }
 
 async function getActiveWeekVotes(activeWeekId: number) {
@@ -152,6 +151,8 @@ async function getActiveWeekVotes(activeWeekId: number) {
             },
           ];
         }
+
+        weekVotes.value.sort((a: any, b: any) => b.count - a.count);
       }
     )
     .subscribe();

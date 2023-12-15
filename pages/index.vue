@@ -15,7 +15,8 @@ const supabase: any = useSupabaseClient();
 
 const input = ref("");
 const searchResults: any = ref([]);
-const choosenChannels: any = ref([]);
+const vote: any = ref(null);
+const showModal = ref(false);
 
 watch(input, () => {
   if (!input.value) {
@@ -23,30 +24,37 @@ watch(input, () => {
   }
 });
 
-function isInList(id: number) {
-  return (
-    choosenChannels.value.findIndex(
-      (channel: any) => channel.id.channelId === id
-    ) !== -1
-  );
+function addOrRemoveChannel(channel: any) {
+  vote.value = channel;
+  showModal.value = true;
+  setScrollBody("remove");
+}
+
+function setModal(displayModal: boolean, confirmVote: boolean) {
+  showModal.value = displayModal;
+  setScrollBody("add");
+
+  if (confirmVote) {
+    addVote();
+  }
+}
+
+function setScrollBody(option: string) {
+  let nuxtDiv = document.getElementById("__nuxt");
+
+  if (nuxtDiv) {
+    if (option === "remove") {
+      nuxtDiv.style.overflowY = "hidden";
+    } else {
+      nuxtDiv.style.overflowY = "auto";
+    }
+  }
 }
 
 async function loginWithGoogle() {
   await supabase.auth.signInWithOAuth({
     provider: "google",
   });
-}
-
-function addOrRemoveChannel(channel: any) {
-  let index = choosenChannels.value.findIndex(
-    (result: any) => result.id.channelId === channel.id.channelId
-  );
-
-  if (index !== -1) {
-    choosenChannels.value.splice(index, 1);
-  } else if (choosenChannels.value.length < 5) {
-    choosenChannels.value = [...choosenChannels.value, channel];
-  }
 }
 
 async function logout() {
@@ -65,22 +73,22 @@ async function getData() {
   }
 }
 
-async function vote() {
+async function addVote() {
   let data: any = [];
 
-  choosenChannels.value.forEach((choosen: any) => {
-    data.push({
-      user_id: props.user.id,
-      week_id: props.activeWeek.id,
-      yt_username: choosen.snippet.channelTitle,
-      yt_thumb: choosen.snippet.thumbnails.default.url,
-    });
+  data.push({
+    user_id: props.user.id,
+    week_id: props.activeWeek.id,
+    yt_username: vote.value.snippet.channelTitle,
+    yt_thumb: vote.value.snippet.thumbnails.default.url,
   });
 
   let insert = await supabase.from("votes").insert(data).select();
   if (insert.status === 201) {
     emits("setAlreadyVoted", true);
   }
+
+  navigateTo("/results");
 }
 </script>
 
@@ -99,7 +107,7 @@ async function vote() {
           class="font-bold flex items-center gap-2 text-2xl font-dmSans mt-16 border-2 p-5 rounded-lg"
           @click="loginWithGoogle"
         >
-          <img class="w-10" src="googleLogo.png" alt="" />
+          <img class="w-10" src="googleLogo.png" alt="Google logo" />
           <span>Login with Google</span>
         </button>
       </div>
@@ -116,13 +124,13 @@ async function vote() {
             >
             <label
               for="input"
-              class="border-b-4 pb-4 w-fit border-double border-[#40c7a3] text-3xl mb-7 font-gloria"
-              >Find your favorite youtuber here and leave your vote!</label
+              class="m-auto border-b-4 pb-4 w-fit border-double border-[#40c7a3] text-3xl mb-7 font-gloria"
+              >Find your favorite youtuber!</label
             >
             <div class="flex items-center gap-5">
               <input
                 id="input"
-                class="shadow placeholder:font-gloria w-full focus:outline-none p-7 rounded-lg text-2xl"
+                class="font-bold shadow text-gray-500 placeholder:font-gloria w-full focus:outline-none p-7 rounded-lg text-2xl"
                 v-model="input"
                 placeholder="Mr.Beast..."
               />
@@ -140,7 +148,6 @@ async function vote() {
             v-for="result in searchResults"
             class="flex bg-white flex-col w-full max-w-[320px] h-[370px] items-center gap-2 relative rounded-lg shadow"
             :key="result?.id?.channelId"
-            @click="addOrRemoveChannel(result)"
           >
             <img
               referrerpolicy="no-referrer"
@@ -156,44 +163,13 @@ async function vote() {
             </div>
 
             <button
-              class="cursor-pointer border-2 border-black p-2 font-bold w-[90%] rounded-lg text-xl text-black absolute bottom-5"
+              class="cursor-pointer border-2 border-black p-2 font-bold w-[80%] rounded-lg text-xl text-black absolute bottom-7"
+              @click="addOrRemoveChannel(result)"
             >
               Vote
             </button>
           </div>
         </div>
-      </div>
-
-      <div class="flex flex-col gap-3 w-full max-w-4xl m-auto">
-        <span v-if="choosenChannels.length" class="mt-5">My voting list</span>
-
-        <div
-          v-for="result in choosenChannels"
-          class="w-full flex justify-between items-center gap-4 shadow p-4 rounded"
-          :key="result.id.channelId"
-        >
-          <span class="text-xl">{{ result.snippet.channelTitle }}</span>
-          <span
-            class="cursor-pointer text-red-600"
-            @click="addOrRemoveChannel(result)"
-            >Remove</span
-          >
-        </div>
-
-        <button
-          v-if="choosenChannels.length === 5 && user"
-          class="cursor-pointer shadow base shadow-black p-5 mt-5 font-bold text-xl bg-black w-[250px] rounded-lg"
-          @click="vote"
-        >
-          Vote
-        </button>
-
-        <span
-          v-if="choosenChannels.length === 5"
-          class="mt-4 text-lg font-bold"
-        >
-          You just can add 5 channels at max
-        </span>
       </div>
     </div>
 
@@ -218,10 +194,17 @@ async function vote() {
         :endCountdown="new Date(nextActiveWeek.beginning)"
       />
     </h2>
+
+    <modal
+      v-if="showModal"
+      :show="showModal"
+      :channelName="vote.snippet.channelTitle"
+      @setShow="setModal"
+    />
   </div>
 </template>
 
-<style scoped>
+<style>
 .crazyBg {
   background-image: linear-gradient(45deg, #274c37, #00316f);
 }
