@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { channelsList } from "./../mock";
+import { setScrollBody } from "./../helpers/functions";
 
 const props = defineProps({
   user: Object as any,
   activeWeek: Object as any,
-  nextActiveWeek: Object as any,
   isWeekActive: Boolean,
   alreadyVoted: Boolean,
   isUserSignedIn: Boolean,
@@ -30,35 +30,21 @@ function addOrRemoveChannel(channel: any) {
   setScrollBody("remove");
 }
 
-function setModal(displayModal: boolean, confirmVote: boolean) {
+function setModal(displayModal: boolean) {
   showModal.value = displayModal;
   setScrollBody("add");
-
-  if (confirmVote) {
-    addVote();
-  }
 }
 
-function setScrollBody(option: string) {
-  let nuxtDiv = document.getElementById("__nuxt");
-
-  if (nuxtDiv) {
-    if (option === "remove") {
-      nuxtDiv.style.overflowY = "hidden";
-    } else {
-      nuxtDiv.style.overflowY = "auto";
-    }
-  }
+function confirmVote() {
+  showModal.value = false;
+  setScrollBody("add");
+  addVote();
 }
 
 async function loginWithGoogle() {
   await supabase.auth.signInWithOAuth({
     provider: "google",
   });
-}
-
-async function logout() {
-  await supabase.auth.signOut();
 }
 
 async function getData() {
@@ -114,25 +100,18 @@ async function addVote() {
     </div>
 
     <div v-else-if="!alreadyVoted && isWeekActive">
-      <div class="flex flex-col w-full max-w-5xl m-auto pb-20">
-        <form class="mt-8" @submit.prevent="getData">
+      <div class="flex flex-col w-full max-w-6xl m-auto pb-20">
+        <h1 class="mt-12 text-3xl font-gloria">
+          Search your favorite youtuber!
+        </h1>
+        <form class="mt-5" @submit.prevent="getData">
           <div class="flex flex-col gap-2">
-            <span
-              class="cursor-pointer font-bold mb-5 text-gray-500"
-              @click="logout"
-              >Logout</span
-            >
-            <label
-              for="input"
-              class="m-auto border-b-4 pb-4 w-fit border-double border-[#40c7a3] text-3xl mb-7 font-gloria"
-              >Find your favorite youtuber!</label
-            >
             <div class="flex items-center gap-5">
               <input
                 id="input"
-                class="font-bold shadow text-gray-500 placeholder:font-gloria w-full focus:outline-none p-7 rounded-lg text-2xl"
+                class="font-bold shadow text-gray-500 w-full focus:outline-none p-7 rounded-lg text-2xl"
                 v-model="input"
-                placeholder="Mr.Beast..."
+                placeholder="My favorite youtube channel..."
               />
               <button
                 class="crazyBg text-white shadow p-6 w-[200px] text-xl rounded-lg font-bold"
@@ -146,7 +125,7 @@ async function addVote() {
         <div v-if="searchResults.length" class="mt-10 flex flex-wrap gap-5">
           <div
             v-for="result in searchResults"
-            class="flex bg-white flex-col w-full max-w-[320px] h-[370px] items-center gap-2 relative rounded-lg shadow"
+            class="flex bg-white flex-col w-full max-w-[305px] h-[370px] items-center gap-2 relative rounded-lg shadow"
             :key="result?.id?.channelId"
           >
             <img
@@ -173,33 +152,30 @@ async function addVote() {
       </div>
     </div>
 
-    <h2
-      v-else-if="alreadyVoted && isWeekActive"
-      class="w-full flex items-center justify-center mb-5 font-bold text-4xl"
-      style="height: calc(100vh - 100px)"
+    <!-- <div
+      v-else-if="alreadyVoted"
+      class="w-full h-full flex items-center crazyBg justify-center"
     >
-      <Countdown
-        message="Countdown for the end of this voting week:"
-        :endCountdown="new Date(activeWeek.ending)"
-      />
-    </h2>
+      <div class="w-full max-w-4xl flex items-end gap-7">
+        <img src="resultsIcon.png" alt="Results Icon" class="w-56" />
+        <h1 class="text-6xl text-white">
+          You already voted this week. Click
+          <NuxtLink to="/results"
+            ><span class="font-gloria font-bold text-[#40c7a3] underline"
+              >here</span
+            ></NuxtLink
+          >
+          to see the results.
+        </h1>
+      </div>
+    </div> -->
 
-    <h2
-      v-else-if="!isWeekActive && nextActiveWeek"
-      class="w-full flex items-center justify-center font-bold text-5xl"
-      style="height: calc(100vh - 100px)"
-    >
-      <Countdown
-        message="Countdown for the next voting week:"
-        :endCountdown="new Date(nextActiveWeek.beginning)"
-      />
-    </h2>
-
-    <modal
+    <ConfirmVoteModal
       v-if="showModal"
       :show="showModal"
       :channelName="vote.snippet.channelTitle"
-      @setShow="setModal"
+      :setShow="setModal"
+      @confirmVote="confirmVote"
     />
   </div>
 </template>

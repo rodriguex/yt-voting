@@ -4,7 +4,10 @@ const props = defineProps({
   endCountdown: { type: Date },
 });
 
-const countdown = ref("");
+const countDays = ref<any>("");
+const countHours = ref<any>("");
+const countMinutes = ref<any>("");
+const countSeconds = ref<any>("");
 
 onMounted(() => {
   setInterval(() => {
@@ -18,17 +21,37 @@ onMounted(() => {
         .split(".");
       let currentSec = 59 - new Date().getSeconds();
 
-      countdown.value = `${days} days, ${h} hours, ${
-        m[0]
-      } minutes and ${currentSec.toString().padStart(2, "0")} seconds`;
+      countDays.value = days;
+      countHours.value = h;
+      countMinutes.value = m[0].toString().padStart(2, "0");
+      countSeconds.value = currentSec.toString().padStart(2, "0");
     }
   }, 1000);
 });
 </script>
 
 <template>
-  <div>
-    <span class="text-3xl font-normal">{{ props.message }}</span>
-    <h1 class="text-5xl text-center mt-2">{{ countdown }}</h1>
+  <div class="flex flex-col items-center">
+    <span class="font-gloria font-normal text-2xl mt-3">{{
+      props.message
+    }}</span>
+    <div class="flex items-center mt-12 text-4xl gap-8">
+      <div class="flex flex-col items-center">
+        <span>{{ countDays }}</span>
+        <span>days</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <span>{{ countHours }}</span>
+        <span>hours</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <span>{{ countMinutes }}</span>
+        <span>minutes</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <span>{{ countSeconds }}</span>
+        <span>seconds</span>
+      </div>
+    </div>
   </div>
 </template>

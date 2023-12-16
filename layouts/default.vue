@@ -6,7 +6,6 @@ const weekVotes: any = ref([]);
 
 const user: any = ref(null);
 const activeWeek: any = ref(null);
-const nextActiveWeek: any = ref(null);
 
 const isWeekActive = ref(true);
 const alreadyVoted = ref(false);
@@ -37,12 +36,9 @@ watchEffect(async () => {
         //   user.value.id
         // );
 
-        // if (getUserVotesFromDb >= 5) {
+        // if (getUserVotesFromDb !== 0) {
         //   alreadyVoted.value = true;
         // }
-      } else {
-        isWeekActive.value = false;
-        nextActiveWeek.value = await getNextActiveWeek();
       }
     } else {
       let saveUser = await addNewUser();
@@ -58,6 +54,10 @@ watchEffect(async () => {
 
 function setAlreadyVoted(value: boolean) {
   // alreadyVoted.value = value;
+}
+
+async function logout() {
+  await supabase.auth.signOut();
 }
 
 async function getUser() {
@@ -81,15 +81,6 @@ async function getActiveWeek() {
     .eq("active", true);
 
   return getActiveWeek.data.length ? getActiveWeek.data[0] : null;
-}
-
-async function getNextActiveWeek() {
-  let getNextActiveWeek: any = await supabase
-    .from("weeks")
-    .select("*")
-    .eq("is_next_active_week", true);
-
-  return getNextActiveWeek.data.length ? getNextActiveWeek.data[0] : null;
 }
 
 function sortVotes(votes: any) {
@@ -186,12 +177,12 @@ async function addNewUser() {
 
 <template>
   <div class="w-full h-full">
+    <Header v-if="user" :user="user" @logout="logout" />
     <main class="h-full">
       <NuxtPage
         v-if="!loading"
         :user="user"
         :activeWeek="activeWeek"
-        :nextActiveWeek="nextActiveWeek"
         :isWeekActive="isWeekActive"
         :alreadyVoted="alreadyVoted"
         :isUserSignedIn="isUserSignedIn"
