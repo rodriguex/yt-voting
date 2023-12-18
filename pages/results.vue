@@ -1,13 +1,41 @@
 <script lang="ts" setup>
 import { setScrollBody } from "~/helpers/functions";
 
-defineProps({ weekVotes: Array as any, activeWeek: { type: Object } });
-const showModal = ref(false);
+const props = defineProps({
+  weekVotes: Array as any,
+  activeWeek: { type: Object },
+});
 
-onMounted(() => {
+const supabase = useSupabaseClient();
+
+const showModal = ref(false);
+const weekInput = ref<any>(null);
+const allPrevWeeks = ref<any>([]);
+const filteredVotes = ref<any>([]);
+
+watchEffect(async () => {
   let mainDiv = document.getElementById("__nuxt");
   if (mainDiv) {
     mainDiv.scrollTop = 0;
+  }
+
+  try {
+    if (props.activeWeek) {
+      filteredVotes.value = props.weekVotes;
+      weekInput.value = props.activeWeek;
+
+      if (!allPrevWeeks.value.length) {
+        let req = await supabase
+          .from("weeks")
+          .select("*")
+          .lte("beginning", props.activeWeek.beginning)
+          .order("id", { ascending: false });
+
+        allPrevWeeks.value = req.data;
+      }
+    }
+  } catch (err) {
+    return err;
   }
 });
 
@@ -20,6 +48,76 @@ function setModal(value: boolean) {
     setScrollBody("remove");
   }
 }
+
+async function getActiveWeekVotes() {
+  if (props.weekVotes.length && weekInput.value.id !== props.activeWeek?.id) {
+    let getVotes = await supabase
+      .from("votes")
+      .select("yt_username, yt_thumb")
+      .eq("week_id", weekInput.value.id);
+
+    filteredVotes.value = sortVotes(getVotes.data);
+
+    supabase
+      .channel("custom-insert-channel")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "votes" },
+        (payload: any) => {
+          let index = filteredVotes.value.findIndex(
+            (result: any) =>
+              result.yt_username === payload.new.yt_username && result.count
+          );
+
+          if (index !== -1) {
+            filteredVotes.value[index].count++;
+          } else {
+            filteredVotes.value = [
+              ...filteredVotes.value,
+              {
+                yt_username: payload.new.yt_username,
+                yt_thumb: payload.new.yt_thumb,
+                count: 1,
+              },
+            ];
+          }
+
+          filteredVotes.value.sort((a: any, b: any) => b.count - a.count);
+        }
+      )
+      .subscribe();
+  } else {
+    filteredVotes.value = props.weekVotes;
+  }
+}
+
+function sortVotes(votes: any) {
+  let results: any = [];
+
+  votes.forEach((vote: any) => {
+    let index = results.findIndex(
+      (result: any) => result.yt_username === vote.yt_username
+    );
+
+    if (index === -1) {
+      results = [
+        ...results,
+        {
+          yt_username: vote.yt_username,
+          yt_thumb: vote.yt_thumb,
+          count: 1,
+        },
+      ];
+    } else {
+      results[index] = {
+        ...results[index],
+        count: results[index].count + 1,
+      };
+    }
+  });
+
+  return results.sort((a: any, b: any) => b.count - a.count);
+}
 </script>
 
 <template>
@@ -28,16 +126,45 @@ function setModal(value: boolean) {
       <h1
         class="mt-12 pb-4 font-gloria font-bold w-fit m-auto border-double border-[#40c7a3] border-b-4 text-3xl"
       >
-        Results of the current week
+        {{
+          `Results of ${
+            weekInput?.id === props.activeWeek?.id
+              ? " the current week"
+              : `${new Date(weekInput?.beginning).getDate()}/${
+                  new Date(weekInput?.beginning).getMonth() + 1
+                } - ${new Date(weekInput?.ending).getDate()}/${
+                  new Date(weekInput?.ending).getMonth() + 1
+                }`
+          }`
+        }}
       </h1>
       <span
         class="w-fit font-bold underline mt-10 cursor-pointer"
         @click="setModal(true)"
         >When this week ends?</span
       >
-      <div class="flex flex-wrap gap-20 my-20 items-center">
+      <div class="mt-10 flex flex-col gap-2">
+        <span>Sort by week</span>
+        <select
+          v-model="weekInput"
+          class="w-[350px] p-3 text-black"
+          @change="getActiveWeekVotes"
+        >
+          <option value="" disabled>Choose an option</option>
+          <option v-for="week in allPrevWeeks" :key="week.id" :value="week">
+            {{
+              `${new Date(week.beginning).getDate()}/${
+                new Date(week.beginning).getMonth() + 1
+              } - ${new Date(week.ending).getDate()}/${
+                new Date(week.ending).getMonth() + 1
+              }`
+            }}
+          </option>
+        </select>
+      </div>
+      <div class="flex flex-wrap gap-20 mt-4 mb-20 items-center">
         <div
-          v-for="(d, index) in weekVotes"
+          v-for="(d, index) in filteredVotes"
           :key="d.id"
           class="flex items-center w-full max-w-[520px] h-[400px] shadow px-10 py-5 justify-center"
         >
