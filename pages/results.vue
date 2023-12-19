@@ -4,6 +4,7 @@ import { setScrollBody } from "~/helpers/functions";
 const props = defineProps({
   weekVotes: Array as any,
   activeWeek: { type: Object },
+  user: { type: Object },
 });
 
 const supabase = useSupabaseClient();
@@ -130,10 +131,11 @@ function setModal(value: boolean) {
 </script>
 
 <template>
-  <div>
+  <div class="w-full h-full">
     <loading :show="loadingState" />
+    <login v-if="!user" />
 
-    <div class="flex flex-col w-full max-w-6xl m-auto">
+    <div v-else class="flex flex-col w-full max-w-6xl m-auto">
       <h1
         class="mt-12 pb-4 font-gloria font-bold w-fit m-auto border-double border-[#40c7a3] border-b-4 text-3xl"
       >
