@@ -14,12 +14,19 @@ defineProps({
       <div
         class="flex flex-col rounded-lg items-center relative bg-white text-black font-bold w-full max-w-3xl h-full max-h-[380px] m-auto"
       >
-        <img
-          src="closeIcon.png"
-          alt="Close modal icon"
-          class="w-6 absolute right-10 top-8 cursor-pointer"
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          viewBox="0 0 24 24"
+          class="text-red-700 absolute right-10 top-8 cursor-pointer"
           @click="setShow(false)"
-        />
+        >
+          <path
+            fill="currentColor"
+            d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z"
+          />
+        </svg>
         <slot />
       </div>
     </div>

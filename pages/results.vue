@@ -12,6 +12,7 @@ const showModal = ref(false);
 const weekInput = ref<any>(null);
 const allPrevWeeks = ref<any>([]);
 const filteredVotes = ref<any>([]);
+const loadingState = ref(false);
 
 watchEffect(async () => {
   let mainDiv = document.getElementById("__nuxt");
@@ -27,12 +28,15 @@ watchEffect(async () => {
       sortChannelsPosition(props.weekVotes);
 
       if (!allPrevWeeks.value.length) {
+        loadingState.value = true;
+
         let req = await supabase
           .from("weeks")
           .select("*")
           .lte("beginning", props.activeWeek.beginning)
           .order("id", { ascending: false });
 
+        loadingState.value = false;
         allPrevWeeks.value = req.data;
       }
     }
@@ -71,11 +75,13 @@ function sortChannelsPosition(votesArray: any) {
 
 async function getActiveWeekVotes() {
   if (props.weekVotes.length && weekInput.value.id !== props.activeWeek?.id) {
+    loadingState.value = true;
     let getVotes = await supabase
       .from("votes")
       .select("yt_username, yt_thumb")
       .eq("week_id", weekInput.value.id);
 
+    loadingState.value = false;
     filteredVotes.value = sortVotes(getVotes.data);
   } else {
     filteredVotes.value = props.weekVotes;
@@ -125,6 +131,8 @@ function setModal(value: boolean) {
 
 <template>
   <div>
+    <loading :show="loadingState" />
+
     <div class="flex flex-col w-full max-w-6xl m-auto">
       <h1
         class="mt-12 pb-4 font-gloria font-bold w-fit m-auto border-double border-[#40c7a3] border-b-4 text-3xl"
