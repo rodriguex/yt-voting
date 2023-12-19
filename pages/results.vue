@@ -24,6 +24,8 @@ watchEffect(async () => {
       filteredVotes.value = props.weekVotes;
       weekInput.value = props.activeWeek;
 
+      sortChannelsPosition(props.weekVotes);
+
       if (!allPrevWeeks.value.length) {
         let req = await supabase
           .from("weeks")
@@ -39,13 +41,31 @@ watchEffect(async () => {
   }
 });
 
-function setModal(value: boolean) {
-  showModal.value = value;
+function sortChannelsPosition(votesArray: any) {
+  if (votesArray.length) {
+    let arr: any = [];
+    let order: any = [];
 
-  if (!value) {
-    setScrollBody("add");
-  } else {
-    setScrollBody("remove");
+    votesArray.forEach((channel: any) => {
+      if (!arr.includes(channel.count)) {
+        arr.push(channel.count);
+      }
+    });
+
+    votesArray.forEach((channel: any) => {
+      arr.forEach((vote: any, voteIndex: number) => {
+        if (channel.count === vote) {
+          order.push({
+            yt_username: channel.yt_username,
+            yt_thumb: channel.yt_thumb,
+            count: channel.count,
+            position: voteIndex + 1,
+          });
+        }
+      });
+    });
+
+    filteredVotes.value = order;
   }
 }
 
@@ -57,38 +77,11 @@ async function getActiveWeekVotes() {
       .eq("week_id", weekInput.value.id);
 
     filteredVotes.value = sortVotes(getVotes.data);
-
-    supabase
-      .channel("custom-insert-channel")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "votes" },
-        (payload: any) => {
-          let index = filteredVotes.value.findIndex(
-            (result: any) =>
-              result.yt_username === payload.new.yt_username && result.count
-          );
-
-          if (index !== -1) {
-            filteredVotes.value[index].count++;
-          } else {
-            filteredVotes.value = [
-              ...filteredVotes.value,
-              {
-                yt_username: payload.new.yt_username,
-                yt_thumb: payload.new.yt_thumb,
-                count: 1,
-              },
-            ];
-          }
-
-          filteredVotes.value.sort((a: any, b: any) => b.count - a.count);
-        }
-      )
-      .subscribe();
   } else {
     filteredVotes.value = props.weekVotes;
   }
+
+  sortChannelsPosition(filteredVotes.value);
 }
 
 function sortVotes(votes: any) {
@@ -117,6 +110,16 @@ function sortVotes(votes: any) {
   });
 
   return results.sort((a: any, b: any) => b.count - a.count);
+}
+
+function setModal(value: boolean) {
+  showModal.value = value;
+
+  if (!value) {
+    setScrollBody("add");
+  } else {
+    setScrollBody("remove");
+  }
 }
 </script>
 
@@ -172,7 +175,7 @@ function sortVotes(votes: any) {
             class="font-bold text-[150px] text-gray-900"
             :class="[index === 0 ? 'w-[65px]' : 'w-[100px]']"
           >
-            {{ index + 1 }}
+            {{ d.position }}
           </h2>
           <div class="flex flex-col">
             <span

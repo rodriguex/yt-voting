@@ -19,6 +19,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      title: "YT Voting",
       link: [
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         {

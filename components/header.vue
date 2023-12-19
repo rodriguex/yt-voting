@@ -17,6 +17,7 @@ const userMenu = ref(false);
         v-if="user"
         alt="User Picuter"
         class="relative cursor-pointer rounded-full w-[70px]"
+        referrerpolicy="no-referrer"
         :src="user.picture"
         @click="userMenu = !userMenu"
       />
