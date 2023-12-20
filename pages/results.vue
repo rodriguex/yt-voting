@@ -160,7 +160,7 @@ function setModal(value: boolean) {
         <span>Sort by week</span>
         <select
           v-model="weekInput"
-          class="w-[350px] p-3 text-black"
+          class="w-[350px] p-3 text-black focus:outline-none"
           @change="getActiveWeekVotes"
         >
           <option value="" disabled>Choose an option</option>

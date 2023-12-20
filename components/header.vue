@@ -23,10 +23,16 @@ const userMenu = ref(false);
       />
       <DropdownBase v-if="userMenu" :show="userMenu" @close="userMenu = false">
         <div
-          class="w-[300px] z-30 fixed top-[100px] right-[330px] bg-white shadow-lg flex flex-col gap-4 p-5 rounded-lg"
+          class="w-[300px] z-30 fixed top-[100px] right-[330px] bg-white shadow-lg flex flex-col gap-2 rounded-lg"
         >
+          <NuxtLink
+            to="/my-votes"
+            class="p-3 hover:bg-gray-100 cursor-pointer"
+            @click="userMenu = false"
+            >My votes</NuxtLink
+          >
           <span
-            class="cursor-pointer"
+            class="cursor-pointer p-3 hover:bg-gray-100"
             @click="
               userMenu = false;
               emits('logout');

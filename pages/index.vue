@@ -80,8 +80,8 @@ async function addVote() {
 <template>
   <div class="h-full">
     <loading :show="loadingState" />
-
     <login v-if="!user" />
+
     <div v-else-if="!alreadyVoted && isWeekActive">
       <div class="flex flex-col w-full max-w-6xl m-auto pb-20">
         <h1 class="mt-12 text-3xl font-gloria">
