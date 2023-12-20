@@ -1,50 +1,87 @@
 <script lang="ts" setup>
 import { setScrollBody } from "~/helpers/functions";
 
-const props = defineProps({
-  weekVotes: Array as any,
-  activeWeek: { type: Object },
-  user: { type: Object },
-});
-
 const supabase = useSupabaseClient();
 
+const allStore = useAllStore();
+const { activeWeek } = storeToRefs(allStore);
+
+const weekVotes = ref<any>([]);
 const showModal = ref(false);
 const weekInput = ref<any>(null);
 const allPrevWeeks = ref<any>([]);
 const filteredVotes = ref<any>([]);
 const loadingState = ref(false);
 
-watchEffect(async () => {
+onMounted(async () => {
   let mainDiv = document.getElementById("__nuxt");
   if (mainDiv) {
     mainDiv.scrollTop = 0;
   }
 
-  try {
-    if (props.activeWeek) {
-      filteredVotes.value = props.weekVotes;
-      weekInput.value = props.activeWeek;
-
-      sortChannelsPosition(props.weekVotes);
-
-      if (!allPrevWeeks.value.length) {
-        loadingState.value = true;
-
-        let req = await supabase
-          .from("weeks")
-          .select("*")
-          .lte("beginning", props.activeWeek.beginning)
-          .order("id", { ascending: false });
-
-        loadingState.value = false;
-        allPrevWeeks.value = req.data;
-      }
-    }
-  } catch (err) {
-    return err;
+  loadingState.value = true;
+  if (!activeWeek.value) {
+    await allStore.getActiveWeek();
   }
+
+  weekInput.value = activeWeek.value;
+  await getActiveWeekVotes();
+
+  let req = await supabase
+    .from("weeks")
+    .select("*")
+    .lte("beginning", activeWeek.value.beginning)
+    .order("id", { ascending: false });
+
+  allPrevWeeks.value = req.data;
+  loadingState.value = false;
 });
+
+async function getActiveWeekVotes() {
+  loadingState.value = true;
+
+  let getVotes = await supabase
+    .from("votes")
+    .select("yt_username, yt_thumb")
+    .eq("week_id", weekInput.value.id);
+
+  weekVotes.value = sortVotes(getVotes.data);
+  filteredVotes.value = weekVotes.value;
+  sortChannelsPosition(filteredVotes.value);
+
+  supabase
+    .channel("custom-insert-channel")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "votes" },
+      (payload: any) => {
+        let index = weekVotes.value.findIndex(
+          (result: any) =>
+            result.yt_username === payload.new.yt_username && result.count
+        );
+
+        if (index !== -1) {
+          weekVotes.value[index].count++;
+        } else {
+          weekVotes.value = [
+            ...weekVotes.value,
+            {
+              yt_username: payload.new.yt_username,
+              yt_thumb: payload.new.yt_thumb,
+              count: 1,
+            },
+          ];
+        }
+
+        weekVotes.value.sort((a: any, b: any) => b.count - a.count);
+        filteredVotes.value = weekVotes.value;
+        sortChannelsPosition(filteredVotes.value);
+      }
+    )
+    .subscribe();
+
+  loadingState.value = false;
+}
 
 function sortChannelsPosition(votesArray: any) {
   if (votesArray.length) {
@@ -72,23 +109,6 @@ function sortChannelsPosition(votesArray: any) {
 
     filteredVotes.value = order;
   }
-}
-
-async function getActiveWeekVotes() {
-  if (props.weekVotes.length && weekInput.value.id !== props.activeWeek?.id) {
-    loadingState.value = true;
-    let getVotes = await supabase
-      .from("votes")
-      .select("yt_username, yt_thumb")
-      .eq("week_id", weekInput.value.id);
-
-    loadingState.value = false;
-    filteredVotes.value = sortVotes(getVotes.data);
-  } else {
-    filteredVotes.value = props.weekVotes;
-  }
-
-  sortChannelsPosition(filteredVotes.value);
 }
 
 function sortVotes(votes: any) {
@@ -132,16 +152,15 @@ function setModal(value: boolean) {
 
 <template>
   <div class="w-full h-full">
-    <loading :show="loadingState" />
-    <login v-if="!user" />
+    <Loading :show="loadingState" />
 
-    <div v-else class="flex flex-col w-full max-w-6xl m-auto">
+    <div class="flex flex-col w-full max-w-6xl m-auto">
       <h1
         class="mt-12 pb-4 font-gloria font-bold w-fit m-auto border-double border-[#40c7a3] border-b-4 text-3xl"
       >
         {{
           `Results of ${
-            weekInput?.id === props.activeWeek?.id
+            weekInput?.id === activeWeek?.id
               ? " the current week"
               : `${new Date(weekInput?.beginning).getDate()}/${
                   new Date(weekInput?.beginning).getMonth() + 1

@@ -5,7 +5,7 @@ defineProps({ show: { type: Boolean } });
 <template>
   <div
     v-if="show"
-    class="w-full h-full absolute top-0 bg-[#00000080] z-30 text-white flex items-center justify-center"
+    class="w-full h-full absolute top-0 bg-[#000000b3] z-30 text-white flex items-center justify-center"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"

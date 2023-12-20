@@ -1,10 +1,47 @@
 <script lang="ts" setup>
-const supabase = useSupabaseClient();
+import axios from "axios";
 
-async function loginWithGoogle() {
-  await supabase.auth.signInWithOAuth({
-    provider: "google",
-  });
+const emits = defineEmits(["saveUser"]);
+const supabase: any = useSupabaseClient();
+
+const allStore = useAllStore();
+const { user } = storeToRefs(allStore);
+
+const { login } = useTokenClient({
+  onSuccess: handleOnSuccess,
+});
+
+function handleOnSuccess(data: any) {
+  axios
+    .get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${data.access_token}`
+    )
+    .then((result: any) => {
+      supabase
+        .from("users")
+        .select("*")
+        .eq("email", result.data.email)
+        .then((userReq: any) => {
+          if (userReq.data.length) {
+            localStorage.setItem("user", JSON.stringify(userReq.data[0]));
+            user.value = userReq.data[0];
+          } else {
+            supabase
+              .from("users")
+              .insert({
+                name: result.data.name,
+                email: result.data.email,
+                picture: result.data.picture,
+              })
+              .select()
+              .then((newUser: any) => {
+                localStorage.setItem("user", JSON.stringify(newUser.data[0]));
+                user.value = newUser.data[0];
+              });
+          }
+          navigateTo("/");
+        });
+    });
 }
 </script>
 
@@ -17,14 +54,15 @@ async function loginWithGoogle() {
       <h2 class="font-gloria w-[70%] text-center text-6xl">
         Vote for the best youtuber of the week!
       </h2>
+
       <button
         class="font-bold flex items-center gap-2 text-2xl font-dmSans mt-16 border-2 p-5 rounded-lg"
-        @click="loginWithGoogle"
+        @click="login"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="35"
-          height="35"
+          width="30"
+          height="30"
           viewBox="0 0 48 48"
         >
           <path

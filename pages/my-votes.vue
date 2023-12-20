@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-const props = defineProps({
-  user: { type: Object },
-  activeWeek: { type: Object },
-});
+const allStore = useAllStore();
+const { user, activeWeek } = storeToRefs(allStore);
 
 const supabase = useSupabaseClient();
 const loadingState = ref(false);
@@ -11,35 +9,36 @@ const filteredVotes = ref<any>([]);
 const weekInput = ref<any>(null);
 const allPrevWeeks = ref<any>([]);
 
-watchEffect(async () => {
-  if (props.activeWeek && props.user)
+onMounted(async () => {
+  if (!activeWeek.value) {
+    await allStore.getActiveWeek();
+  }
+
+  loadingState.value = true;
+  try {
+    let weeksReq = await supabase
+      .from("weeks")
+      .select("*")
+      .lte("beginning", activeWeek.value?.beginning)
+      .order("id", { ascending: false });
+
+    allPrevWeeks.value = weeksReq.data;
+
     try {
-      loadingState.value = true;
-      let weeksReq = await supabase
-        .from("weeks")
-        .select("*")
-        .lte("beginning", props.activeWeek?.beginning)
+      let req = await supabase
+        .from("votes")
+        .select("*, weeks (id, beginning, ending, active)")
+        .eq("user_id", user.value?.id)
         .order("id", { ascending: false });
 
-      allPrevWeeks.value = weeksReq.data;
+      votes.value = req.data;
+      filteredVotes.value = req.data;
     } catch (err) {
       return err;
     }
-
-  try {
-    loadingState.value = true;
-    let req = await supabase
-      .from("votes")
-      .select("*, weeks (id, beginning, ending, active)")
-      .eq("user_id", props.user?.id)
-      .order("id", { ascending: false });
-
-    votes.value = req.data;
-    filteredVotes.value = req.data;
   } catch (err) {
     return err;
   }
-
   loadingState.value = false;
 });
 
@@ -52,10 +51,9 @@ function filterVotesHistory() {
 
 <template>
   <div class="h-full">
-    <loading :show="loadingState" />
-    <login v-if="!user" />
+    <Loading :show="loadingState" />
 
-    <div v-else class="flex flex-col pb-20 w-full max-w-6xl m-auto">
+    <div class="flex flex-col pb-20 w-full max-w-6xl m-auto">
       <h1 class="mt-12 text-3xl font-gloria">My votes page</h1>
       <div class="mt-10 flex flex-col gap-2">
         <span>Sort by week</span>

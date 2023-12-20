@@ -8,9 +8,13 @@ export default defineNuxtConfig({
     },
   },
   css: ["~/assets/styles.css"],
-  modules: ["@nuxtjs/supabase"],
+  modules: ["@nuxtjs/supabase", "nuxt-vue3-google-signin", "@pinia/nuxt"],
+  googleSignIn: { clientId: process.env.GOOGLE_KEY },
   supabase: {
     redirect: false,
+  },
+  pinia: {
+    storesDirs: ["./stores/**"],
   },
   runtimeConfig: {
     public: {

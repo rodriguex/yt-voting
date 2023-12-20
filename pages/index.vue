@@ -2,15 +2,6 @@
 import { channelsList } from "./../mock";
 import { setScrollBody } from "./../helpers/functions";
 
-const props = defineProps({
-  user: Object as any,
-  activeWeek: Object as any,
-  isWeekActive: Boolean,
-  alreadyVoted: Boolean,
-  isUserSignedIn: Boolean,
-});
-
-const emits = defineEmits(["setAlreadyVoted"]);
 const supabase: any = useSupabaseClient();
 
 const input = ref("");
@@ -19,11 +10,43 @@ const vote: any = ref(null);
 const showModal = ref(false);
 const loadingState = ref(false);
 
+const allStore = useAllStore();
+const { user, activeWeek, alreadyVoted } = storeToRefs(allStore);
+
+onMounted(async () => {
+  loadingState.value = true;
+  if (!activeWeek.value) {
+    await allStore.getActiveWeek();
+  }
+
+  if (alreadyVoted.value === true) {
+    navigateTo("/alreadyVoted");
+  } else if (alreadyVoted.value === null) {
+    let userVotes = await getUserVotes(activeWeek.value.id, user.value.id);
+    if (userVotes > 0) {
+      alreadyVoted.value = true;
+      navigateTo("/alreadyVoted");
+    }
+  }
+
+  loadingState.value = false;
+});
+
 watch(input, () => {
   if (!input.value) {
     searchResults.value = [];
   }
 });
+
+async function getUserVotes(weekId: number, userId: any) {
+  let userVotes: any = await supabase
+    .from("votes")
+    .select("*")
+    .eq("week_id", weekId)
+    .eq("user_id", userId);
+
+  return userVotes.data.length ? userVotes.data.length : 0;
+}
 
 function addOrRemoveChannel(channel: any) {
   vote.value = channel;
@@ -60,8 +83,8 @@ async function addVote() {
   let data: any = [];
 
   data.push({
-    user_id: props.user.id,
-    week_id: props.activeWeek.id,
+    user_id: user.value.id,
+    week_id: activeWeek.value.id,
     yt_username: vote.value.snippet.channelTitle,
     yt_thumb: vote.value.snippet.thumbnails.default.url,
   });
@@ -69,20 +92,18 @@ async function addVote() {
   loadingState.value = true;
   let insert = await supabase.from("votes").insert(data).select();
   if (insert.status === 201) {
-    emits("setAlreadyVoted", true);
+    alreadyVoted.value = true;
   }
-  loadingState.value = false;
 
+  loadingState.value = false;
   navigateTo("/results");
 }
 </script>
 
 <template>
-  <div class="h-full">
-    <loading :show="loadingState" />
-    <login v-if="!user" />
-
-    <div v-else-if="!alreadyVoted && isWeekActive">
+  <div v-if="user" class="h-full">
+    <Loading :show="loadingState" />
+    <div>
       <div class="flex flex-col w-full max-w-6xl m-auto pb-20">
         <h1 class="mt-12 text-3xl font-gloria">
           Search your favorite youtuber!
@@ -134,24 +155,6 @@ async function addVote() {
         </div>
       </div>
     </div>
-
-    <!-- <div
-      v-else-if="alreadyVoted"
-      class="w-full h-full flex items-center crazyBg justify-center"
-    >
-      <div class="w-full max-w-4xl flex items-end gap-7">
-        <img src="resultsIcon.png" alt="Results Icon" class="w-56" />
-        <h1 class="text-6xl text-white">
-          You already voted this week. Click
-          <NuxtLink to="/results"
-            ><span class="font-gloria font-bold text-[#40c7a3] underline"
-              >here</span
-            ></NuxtLink
-          >
-          to see the results.
-        </h1>
-      </div>
-    </div> -->
 
     <ConfirmVoteModal
       v-if="showModal"
