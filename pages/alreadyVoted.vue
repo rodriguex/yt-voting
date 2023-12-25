@@ -12,19 +12,19 @@ onMounted(() => {
 <template>
   <div
     v-if="alreadyVoted"
-    class="w-full flex items-center crazyBg justify-center"
-    style="height: calc(100%)"
+    class="absolute top-[100px] w-full flex items-center crazyBg justify-center"
+    style="height: calc(100% - 100px)"
   >
     <div class="w-full max-w-4xl flex items-end gap-7">
-      <img src="resultsIcon.png" alt="Results Icon" class="w-56" />
+      <img src="/resultsIcon.png" alt="Results Icon" class="w-56" />
       <h1 class="text-6xl text-white">
-        You already voted this week. Click
+        You already voted this week. Check out all
         <NuxtLink to="/results"
           ><span class="font-gloria font-bold text-[#40c7a3] underline"
-            >here</span
+            >results</span
           ></NuxtLink
         >
-        to see the results.
+        here.
       </h1>
     </div>
   </div>

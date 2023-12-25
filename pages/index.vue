@@ -9,23 +9,26 @@ const searchResults: any = ref([]);
 const vote: any = ref(null);
 const showModal = ref(false);
 const loadingState = ref(false);
+const mainDiv = ref<any>(null);
 
 const allStore = useAllStore();
 const { user, activeWeek, alreadyVoted } = storeToRefs(allStore);
 
 onMounted(async () => {
+  if (!user.value) return;
+
   loadingState.value = true;
   if (!activeWeek.value) {
     await allStore.getActiveWeek();
   }
 
   if (alreadyVoted.value === true) {
-    navigateTo("/alreadyVoted");
+    // navigateTo("/alreadyVoted");
   } else if (alreadyVoted.value === null) {
     let userVotes = await getUserVotes(activeWeek.value.id, user.value.id);
     if (userVotes > 0) {
       alreadyVoted.value = true;
-      navigateTo("/alreadyVoted");
+      // navigateTo("/alreadyVoted");
     }
   }
 
@@ -101,57 +104,57 @@ async function addVote() {
 </script>
 
 <template>
-  <div v-if="user" class="h-full">
+  <div>
     <Loading :show="loadingState" />
-    <div>
-      <div class="flex flex-col w-full max-w-6xl m-auto pb-20">
-        <h1 class="mt-12 text-3xl font-gloria">
-          Search your favorite youtuber!
-        </h1>
-        <form class="mt-5" @submit.prevent="getData">
-          <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-5">
-              <input
-                id="input"
-                class="font-bold shadow text-gray-500 w-full focus:outline-none p-7 rounded-lg text-2xl"
-                v-model="input"
-                placeholder="My favorite youtube channel..."
-              />
-              <button
-                class="crazyBg text-white shadow p-6 w-[200px] text-xl rounded-lg font-bold"
-              >
-                Search
-              </button>
-            </div>
-          </div>
-        </form>
-
-        <div v-if="searchResults.length" class="mt-10 flex flex-wrap gap-5">
-          <div
-            v-for="result in searchResults"
-            class="flex bg-white flex-col w-full max-w-[305px] h-[370px] items-center gap-2 relative rounded-lg shadow"
-            :key="result?.id?.channelId"
-          >
-            <img
-              referrerpolicy="no-referrer"
-              alt="Youtuber picture"
-              class="rounded-lg"
-              :src="result?.snippet?.thumbnails?.default?.url"
+    <div class="flex flex-col w-full max-w-6xl m-auto pb-20">
+      <h1 class="mt-12 text-3xl font-gloria">Search your favorite youtuber!</h1>
+      <form class="mt-5" @submit.prevent="getData">
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center gap-5">
+            <input
+              id="input"
+              class="font-bold shadow text-gray-500 w-full focus:outline-none p-7 rounded-lg text-2xl"
+              v-model="input"
+              placeholder="My favorite youtube channel..."
             />
-
-            <div class="p-3 flex flex-col gap-3">
-              <span class="font-bold text-xl text-black">{{
-                result?.snippet?.channelTitle
-              }}</span>
-            </div>
-
             <button
-              class="cursor-pointer border-2 border-black p-2 font-bold w-[80%] rounded-lg text-xl text-black absolute bottom-7"
-              @click="addOrRemoveChannel(result)"
+              class="crazyBg text-white shadow p-6 w-[200px] text-xl rounded-lg font-bold"
             >
-              Vote
+              Search
             </button>
           </div>
+        </div>
+      </form>
+
+      <div
+        v-if="searchResults.length"
+        class="mt-10 flex flex-wrap gap-5"
+        ref="mainDiv"
+      >
+        <div
+          v-for="result in searchResults"
+          class="flex bg-white flex-col w-full max-w-[305px] h-[370px] items-center gap-2 relative rounded-lg shadow"
+          :key="result?.id?.channelId"
+        >
+          <img
+            referrerpolicy="no-referrer"
+            alt="Youtuber picture"
+            class="rounded-lg"
+            :src="result?.snippet?.thumbnails?.default?.url"
+          />
+
+          <div class="p-3 flex flex-col gap-3">
+            <span class="font-bold text-xl text-black">{{
+              result?.snippet?.channelTitle
+            }}</span>
+          </div>
+
+          <button
+            class="cursor-pointer border-2 border-black p-2 font-bold w-[80%] rounded-lg text-xl text-black absolute bottom-7"
+            @click="addOrRemoveChannel(result)"
+          >
+            Vote
+          </button>
         </div>
       </div>
     </div>
@@ -165,9 +168,3 @@ async function addVote() {
     />
   </div>
 </template>
-
-<style>
-.crazyBg {
-  background-image: linear-gradient(45deg, #274c37, #00316f);
-}
-</style>

@@ -6,9 +6,9 @@ defineProps({
 </script>
 
 <template>
-  <Transition v-if="show">
+  <Teleport to="body" v-if="show">
     <div
-      class="absolute top-0 w-full h-full z-30 bg-[#000000b8] flex items-center justify-center"
+      class="absolute top-0 w-full h-screen z-30 bg-[#000000b8] flex items-center justify-center"
       @click.self="setShow(false)"
     >
       <div
@@ -30,5 +30,5 @@ defineProps({
         <slot />
       </div>
     </div>
-  </Transition>
+  </Teleport>
 </template>

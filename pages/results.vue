@@ -176,8 +176,9 @@ function setModal(value: boolean) {
         >When this week ends?</span
       >
       <div class="mt-10 flex flex-col gap-2">
-        <span>Sort by week</span>
+        <label for="input">Sort by week</label>
         <select
+          id="input"
           v-model="weekInput"
           class="w-[350px] p-3 text-black focus:outline-none"
           @change="getActiveWeekVotes"
@@ -195,10 +196,11 @@ function setModal(value: boolean) {
         </select>
       </div>
       <div class="flex flex-wrap gap-20 mt-4 mb-20 items-center">
-        <div
+        <NuxtLink
           v-for="(d, index) in filteredVotes"
-          :key="d.id"
           class="flex items-center w-full max-w-[520px] h-[400px] shadow px-10 py-5 justify-center"
+          :key="d.id"
+          :to="`channels/${d.yt_username}`"
         >
           <h2
             class="font-bold text-[150px] text-gray-900"
@@ -225,7 +227,7 @@ function setModal(value: boolean) {
               }}</span>
             </div>
           </div>
-        </div>
+        </NuxtLink>
       </div>
     </div>
 

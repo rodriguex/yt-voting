@@ -10,7 +10,7 @@ defineProps({
   <modal :show="show" :setShow="setShow">
     <div class="w-full flex h-full">
       <div class="crazyBg flex items-center justify-center p-10 rounded-s-md">
-        <img src="clock.png" alt="" class="w-[150px] h-fit" />
+        <img src="./clock.png" alt="" class="w-[150px] h-fit" />
       </div>
       <div class="w-full h-full flex items-center justify-center">
         <Countdown

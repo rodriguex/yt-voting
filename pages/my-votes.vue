@@ -56,8 +56,9 @@ function filterVotesHistory() {
     <div class="flex flex-col pb-20 w-full max-w-6xl m-auto">
       <h1 class="mt-12 text-3xl font-gloria">My votes page</h1>
       <div class="mt-10 flex flex-col gap-2">
-        <span>Sort by week</span>
+        <label for="input">Sort by week</label>
         <select
+          id="input"
           v-model="weekInput"
           class="w-[350px] p-3 text-black focus:outline-none"
           @change="filterVotesHistory"

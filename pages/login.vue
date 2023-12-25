@@ -39,6 +39,8 @@ function handleOnSuccess(data: any) {
                 user.value = newUser.data[0];
               });
           }
+        })
+        .finally(() => {
           navigateTo("/");
         });
     });
@@ -46,9 +48,9 @@ function handleOnSuccess(data: any) {
 </script>
 
 <template>
-  <div class="w-full h-full flex">
+  <div class="w-full h-screen flex">
     <div
-      class="bg-[url('beast.jpg')] w-[45%] bg-cover bg-center bg-no-repeat"
+      class="bg-[url('~/assets/imgs/beast.jpg')] w-[45%] bg-cover bg-center bg-no-repeat"
     ></div>
     <div class="text-white crazyBg flex flex-col items-center justify-center">
       <h2 class="font-gloria w-[70%] text-center text-6xl">
