@@ -228,11 +228,6 @@ function setModal(value: boolean) {
       </div>
     </div>
 
-    <CountdownModal
-      v-if="showModal"
-      :show="showModal"
-      :setShow="setModal"
-      :activeWeek="activeWeek"
-    />
+    <CountdownModal v-if="showModal" :show="showModal" :setShow="setModal" />
   </div>
 </template>

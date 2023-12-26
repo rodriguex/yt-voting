@@ -2,8 +2,52 @@
 defineProps({
   show: { type: Boolean },
   setShow: { type: Function, default: () => {} },
-  activeWeek: { type: Object },
 });
+
+const allStore = useAllStore();
+const { activeWeek } = storeToRefs(allStore);
+
+const countDays = ref<any>("");
+const countHours = ref<any>("");
+const countMinutes = ref<any>("");
+const countSeconds = ref<any>("");
+const intervalId = ref<any>(null);
+
+onMounted(() => {
+  countdown();
+  intervalId.value = setInterval(() => {
+    countdown();
+  }, 1000);
+});
+
+onUnmounted(() => {
+  clearInterval(intervalId.value);
+});
+
+function countdown() {
+  if (activeWeek.value.ending) {
+    let now = new Date();
+    let evenDate = new Date(activeWeek.value.ending);
+
+    let actualTime = now.getTime();
+    let eventTime = evenDate.getTime();
+    let remTime = eventTime - actualTime;
+
+    let s = Math.floor(remTime / 1000);
+    let m = Math.ceil(s / 60);
+    let h = Math.floor(m / 60);
+    let d = Math.floor(h / 24);
+
+    h %= 24;
+    m %= 60;
+    s %= 60;
+
+    countDays.value = d.toString().padStart(2, "0");
+    countHours.value = h.toString().padStart(2, "0");
+    countMinutes.value = m.toString().padStart(2, "0");
+    countSeconds.value = s.toString().padStart(2, "0");
+  }
+}
 </script>
 
 <template>
@@ -17,11 +61,29 @@ defineProps({
         />
       </div>
       <div class="w-full h-full flex items-center justify-center">
-        <Countdown
-          v-if="activeWeek"
-          message="This voting week is going to end in:"
-          :endCountdown="new Date(activeWeek.ending)"
-        />
+        <div class="flex flex-col items-center">
+          <span class="font-gloria font-normal text-2xl mt-3"
+            >This week is gonna end in:</span
+          >
+          <div class="flex items-center mt-12 text-4xl gap-8">
+            <div class="flex flex-col items-center">
+              <span>{{ countDays }}</span>
+              <span>days</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span>{{ countHours }}</span>
+              <span>hours</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span>{{ countMinutes }}</span>
+              <span>minutes</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span>{{ countSeconds }}</span>
+              <span>seconds</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </modal>
