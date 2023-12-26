@@ -3,12 +3,16 @@ defineProps({
   show: { type: Boolean },
   setShow: { type: Function, default: () => {} },
 });
+
+const allStore = useAllStore();
+const { scrollTop } = storeToRefs(allStore);
 </script>
 
 <template>
   <Teleport to="body" v-if="show">
     <div
-      class="absolute top-0 w-full h-screen z-30 bg-[#000000b8] flex items-center justify-center"
+      class="absolute w-full h-screen z-30 bg-[#000000b8] flex items-center justify-center"
+      :style="[scrollTop > 0 ? `top: ${scrollTop}px` : `top: 0px`]"
       @click.self="setShow(false)"
     >
       <div

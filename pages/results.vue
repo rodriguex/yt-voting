@@ -4,14 +4,13 @@ import { setScrollBody } from "~/helpers/functions";
 const supabase = useSupabaseClient();
 
 const allStore = useAllStore();
-const { activeWeek } = storeToRefs(allStore);
+const { activeWeek, isLoading } = storeToRefs(allStore);
 
 const weekVotes = ref<any>([]);
 const showModal = ref(false);
 const weekInput = ref<any>(null);
 const allPrevWeeks = ref<any>([]);
 const filteredVotes = ref<any>([]);
-const loadingState = ref(false);
 
 onMounted(async () => {
   let mainDiv = document.getElementById("__nuxt");
@@ -19,7 +18,7 @@ onMounted(async () => {
     mainDiv.scrollTop = 0;
   }
 
-  loadingState.value = true;
+  isLoading.value = true;
   if (!activeWeek.value) {
     await allStore.getActiveWeek();
   }
@@ -34,11 +33,11 @@ onMounted(async () => {
     .order("id", { ascending: false });
 
   allPrevWeeks.value = req.data;
-  loadingState.value = false;
+  isLoading.value = false;
 });
 
 async function getActiveWeekVotes() {
-  loadingState.value = true;
+  isLoading.value = true;
 
   let getVotes = await supabase
     .from("votes")
@@ -80,7 +79,7 @@ async function getActiveWeekVotes() {
     )
     .subscribe();
 
-  loadingState.value = false;
+  isLoading.value = false;
 }
 
 function sortChannelsPosition(votesArray: any) {
@@ -152,8 +151,6 @@ function setModal(value: boolean) {
 
 <template>
   <div class="w-full h-full">
-    <Loading :show="loadingState" />
-
     <div class="flex flex-col w-full max-w-6xl m-auto">
       <h1
         class="mt-12 pb-4 font-gloria font-bold w-fit m-auto border-double border-[#40c7a3] border-b-4 text-3xl"

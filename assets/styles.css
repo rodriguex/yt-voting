@@ -5,8 +5,6 @@
 html,
 body,
 #__nuxt {
-  height: 100%;
-  color: black;
   font-family: "DM Sans", cursive;
 }
 

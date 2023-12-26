@@ -1,7 +1,13 @@
 <script lang="ts" setup>
 const allStore = useAllStore();
-const { user } = storeToRefs(allStore);
+const { user, scrollTop } = storeToRefs(allStore);
 const router = useRoute();
+
+onMounted(() => {
+  document.addEventListener("scroll", () => {
+    scrollTop.value = document.documentElement.scrollTop;
+  });
+});
 
 watchEffect(() => {
   if (process.client) {
@@ -16,9 +22,10 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="w-full h-full">
+  <div class="w-full">
+    <Loading />
     <Header />
-    <main :style="user ? 'height: calc(100% - 100px)' : 'height: 100%'">
+    <main>
       <slot />
     </main>
   </div>

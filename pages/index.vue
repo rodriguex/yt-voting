@@ -8,16 +8,15 @@ const input = ref("");
 const searchResults: any = ref([]);
 const vote: any = ref(null);
 const showModal = ref(false);
-const loadingState = ref(false);
 const mainDiv = ref<any>(null);
 
 const allStore = useAllStore();
-const { user, activeWeek, alreadyVoted } = storeToRefs(allStore);
+const { user, activeWeek, alreadyVoted, isLoading } = storeToRefs(allStore);
 
 onMounted(async () => {
   if (!user.value) return;
 
-  loadingState.value = true;
+  isLoading.value = true;
   if (!activeWeek.value) {
     await allStore.getActiveWeek();
   }
@@ -32,7 +31,7 @@ onMounted(async () => {
     }
   }
 
-  loadingState.value = false;
+  isLoading.value = false;
 });
 
 watch(input, () => {
@@ -70,14 +69,14 @@ function confirmVote() {
 
 async function getData() {
   if (input.value) {
-    loadingState.value = true;
+    isLoading.value = true;
     // let req: any = await $fetch(
     //   `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${input.value}&key=${config.public.GOOGLE_KEY}`
     // );
     // searchResults.value = req.items;
     setTimeout(() => {
       searchResults.value = channelsList;
-      loadingState.value = false;
+      isLoading.value = false;
     }, 400);
   }
 }
@@ -92,20 +91,19 @@ async function addVote() {
     yt_thumb: vote.value.snippet.thumbnails.default.url,
   });
 
-  loadingState.value = true;
+  isLoading.value = true;
   let insert = await supabase.from("votes").insert(data).select();
   if (insert.status === 201) {
     alreadyVoted.value = true;
   }
 
-  loadingState.value = false;
+  isLoading.value = false;
   navigateTo("/results");
 }
 </script>
 
 <template>
   <div>
-    <Loading :show="loadingState" />
     <div class="flex flex-col w-full max-w-6xl m-auto pb-20">
       <h1 class="mt-12 text-3xl font-gloria">Search your favorite youtuber!</h1>
       <form class="mt-5" @submit.prevent="getData">

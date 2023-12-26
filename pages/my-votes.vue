@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 const allStore = useAllStore();
-const { user, activeWeek } = storeToRefs(allStore);
+const { user, activeWeek, isLoading } = storeToRefs(allStore);
 
 const supabase = useSupabaseClient();
-const loadingState = ref(false);
 const votes = ref<any>([]);
 const filteredVotes = ref<any>([]);
 const weekInput = ref<any>(null);
@@ -14,7 +13,7 @@ onMounted(async () => {
     await allStore.getActiveWeek();
   }
 
-  loadingState.value = true;
+  isLoading.value = true;
   try {
     let weeksReq = await supabase
       .from("weeks")
@@ -39,7 +38,7 @@ onMounted(async () => {
   } catch (err) {
     return err;
   }
-  loadingState.value = false;
+  isLoading.value = false;
 });
 
 function filterVotesHistory() {
@@ -51,8 +50,6 @@ function filterVotesHistory() {
 
 <template>
   <div class="h-full">
-    <Loading :show="loadingState" />
-
     <div class="flex flex-col pb-20 w-full max-w-6xl m-auto">
       <h1 class="mt-12 text-3xl font-gloria">My votes page</h1>
       <div class="mt-10 flex flex-col gap-2">

@@ -1,11 +1,23 @@
 <script lang="ts" setup>
-defineProps({ show: { type: Boolean } });
+import { setScrollBody } from "~/helpers/functions";
+
+const allStore = useAllStore();
+const { isLoading, scrollTop } = storeToRefs(allStore);
+
+watchEffect(() => {
+  if (isLoading.value) {
+    setScrollBody("remove");
+  } else {
+    setScrollBody("add");
+  }
+});
 </script>
 
 <template>
   <div
-    v-if="show"
-    class="w-full h-full absolute top-0 bg-[#000000b3] z-30 text-white flex items-center justify-center"
+    v-if="isLoading"
+    class="w-full h-screen absolute bg-[#000000b3] z-30 text-white flex items-center justify-center"
+    :style="[scrollTop > 0 ? `top: ${scrollTop}px` : `top: 0px`]"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"

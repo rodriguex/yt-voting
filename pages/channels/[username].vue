@@ -6,10 +6,9 @@ const channelData = ref<any>(null);
 const weekList = ref<any>([]);
 const channelHistory = ref<any>(null);
 const weekInput = ref<any>(null);
-const loadingState = ref(false);
 
 const allStore = useAllStore();
-const { activeWeek } = storeToRefs(allStore);
+const { activeWeek, isLoading } = storeToRefs(allStore);
 
 onMounted(async () => {
   let mainDiv = document.getElementById("__nuxt");
@@ -17,7 +16,7 @@ onMounted(async () => {
     mainDiv.scrollTop = 0;
   }
 
-  loadingState.value = true;
+  isLoading.value = true;
   try {
     let channelDataReq: any = await supabase
       .from("votes")
@@ -58,7 +57,7 @@ onMounted(async () => {
   } catch (err) {
     return err;
   }
-  loadingState.value = false;
+  isLoading.value = false;
 });
 
 function sortVotes(votes: any) {
@@ -118,7 +117,7 @@ function sortChannelsPosition(votesArray: any) {
 }
 
 async function getChannelPosition() {
-  loadingState.value = true;
+  isLoading.value = true;
   try {
     let req: any = await supabase
       .from("votes")
@@ -141,13 +140,12 @@ async function getChannelPosition() {
   } catch (err) {
     return err;
   }
-  loadingState.value = false;
+  isLoading.value = false;
 }
 </script>
 
 <template>
   <ClientOnly>
-    <Loading :show="loadingState" />
     <div v-if="channelData" class="flex flex-col w-full max-w-6xl m-auto pb-20">
       <div class="mt-12 flex flex-col gap-5">
         <h1 class="text-4xl font-gloria">

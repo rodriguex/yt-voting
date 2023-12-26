@@ -4,6 +4,8 @@ export const useAllStore = defineStore("all", () => {
   const user = ref<any>(null);
   const activeWeek = ref<any>(null);
   const alreadyVoted = ref<any>(null);
+  const isLoading = ref(false);
+  const scrollTop = ref(0);
 
   async function getActiveWeek() {
     try {
@@ -25,5 +27,7 @@ export const useAllStore = defineStore("all", () => {
     activeWeek,
     alreadyVoted,
     getActiveWeek,
+    isLoading,
+    scrollTop,
   };
 });
