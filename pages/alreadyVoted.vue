@@ -16,7 +16,11 @@ onMounted(() => {
     style="height: calc(100% - 100px)"
   >
     <div class="w-full max-w-4xl flex items-end gap-7">
-      <img src="/resultsIcon.png" alt="Results Icon" class="w-56" />
+      <img
+        src="~/assets/imgs/resultsIcon.png"
+        alt="Results Icon"
+        class="w-56"
+      />
       <h1 class="text-6xl text-white">
         You already voted this week. Check out all
         <NuxtLink to="/results"

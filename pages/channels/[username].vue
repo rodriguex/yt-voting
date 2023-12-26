@@ -12,6 +12,11 @@ const allStore = useAllStore();
 const { activeWeek } = storeToRefs(allStore);
 
 onMounted(async () => {
+  let mainDiv = document.getElementById("__nuxt");
+  if (mainDiv) {
+    mainDiv.scrollTop = 0;
+  }
+
   loadingState.value = true;
   try {
     let channelDataReq: any = await supabase
