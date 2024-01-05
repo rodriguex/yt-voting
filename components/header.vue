@@ -12,7 +12,10 @@ async function logout() {
 
 <template>
   <ClientOnly>
-    <div v-if="user" class="h-[100px] w-full sticky top-0 z-20 bg-white shadow">
+    <div
+      v-if="user"
+      class="h-[100px] px-4 xl:px-0 w-full sticky top-0 z-20 bg-white shadow"
+    >
       <div
         class="w-full m-auto max-w-6xl flex items-center py-3 justify-between"
       >
@@ -24,7 +27,7 @@ async function logout() {
         </NuxtLink>
         <img
           alt="User Picture"
-          class="relative cursor-pointer rounded-full w-[70px]"
+          class="relative cursor-pointer rounded-full w-[60px] md:w-[70px]"
           referrerpolicy="no-referrer"
           :src="user.picture"
           @click="userMenu = !userMenu"
@@ -35,7 +38,7 @@ async function logout() {
           @close="userMenu = false"
         >
           <div
-            class="w-[300px] z-30 fixed top-[100px] right-[330px] bg-white shadow-lg flex flex-col gap-2"
+            class="w-[300px] z-30 fixed top-[100px] right-[5%] bg-white shadow-lg flex flex-col gap-2"
           >
             <NuxtLink
               to="/my-votes"

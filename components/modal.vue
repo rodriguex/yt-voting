@@ -16,14 +16,14 @@ const { scrollTop } = storeToRefs(allStore);
       @click.self="setShow(false)"
     >
       <div
-        class="flex flex-col rounded-lg items-center relative bg-white text-black font-bold w-full max-w-3xl h-full max-h-[380px] m-auto"
+        class="flex flex-col rounded-lg items-center relative bg-white text-black font-bold w-full max-w-3xl h-full sm:max-h-[380px] m-auto"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="30"
           height="30"
           viewBox="0 0 24 24"
-          class="text-red-700 absolute right-10 top-8 cursor-pointer"
+          class="text-white sm:text-red-700 absolute right-10 top-8 cursor-pointer"
           @click="setShow(false)"
         >
           <path

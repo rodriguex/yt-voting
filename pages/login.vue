@@ -50,7 +50,7 @@ function handleOnSuccess(data: any) {
 <template>
   <div class="w-full h-screen flex">
     <div
-      class="bg-[url('~/assets/imgs/beast.jpg')] w-[45%] bg-cover bg-center bg-no-repeat"
+      class="bg-[url('~/assets/imgs/beast.jpg')] hidden lg:block w-[45%] bg-cover bg-center bg-no-repeat"
     ></div>
     <div class="text-white crazyBg flex flex-col items-center justify-center">
       <h2 class="font-gloria w-[70%] text-center text-6xl">

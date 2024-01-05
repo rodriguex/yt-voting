@@ -41,7 +41,7 @@ async function getActiveWeekVotes() {
 
   let getVotes = await supabase
     .from("votes")
-    .select("yt_username, yt_thumb")
+    .select("yt_id, yt_username, yt_thumb")
     .eq("week_id", weekInput.value.id);
 
   weekVotes.value = sortVotes(getVotes.data);
@@ -55,8 +55,7 @@ async function getActiveWeekVotes() {
       { event: "INSERT", schema: "public", table: "votes" },
       (payload: any) => {
         let index = weekVotes.value.findIndex(
-          (result: any) =>
-            result.yt_username === payload.new.yt_username && result.count
+          (result: any) => result.yt_id === payload.new.yt_id && result.count
         );
 
         if (index !== -1) {
@@ -65,6 +64,7 @@ async function getActiveWeekVotes() {
           weekVotes.value = [
             ...weekVotes.value,
             {
+              yt_id: payload.new.yt_id,
               yt_username: payload.new.yt_username,
               yt_thumb: payload.new.yt_thumb,
               count: 1,
@@ -97,6 +97,7 @@ function sortChannelsPosition(votesArray: any) {
       arr.forEach((vote: any, voteIndex: number) => {
         if (channel.count === vote) {
           order.push({
+            yt_id: channel.yt_id,
             yt_username: channel.yt_username,
             yt_thumb: channel.yt_thumb,
             count: channel.count,
@@ -114,14 +115,13 @@ function sortVotes(votes: any) {
   let results: any = [];
 
   votes.forEach((vote: any) => {
-    let index = results.findIndex(
-      (result: any) => result.yt_username === vote.yt_username
-    );
+    let index = results.findIndex((result: any) => result.yt_id === vote.yt_id);
 
     if (index === -1) {
       results = [
         ...results,
         {
+          yt_id: vote.yt_id,
           yt_username: vote.yt_username,
           yt_thumb: vote.yt_thumb,
           count: 1,
@@ -151,7 +151,7 @@ function setModal(value: boolean) {
 
 <template>
   <div class="w-full h-full">
-    <div class="flex flex-col w-full max-w-6xl m-auto">
+    <div class="px-4 xl:px-0 flex flex-col w-full max-w-6xl m-auto">
       <h1
         class="mt-12 pb-4 font-gloria font-bold w-fit m-auto border-double border-[#40c7a3] border-b-4 text-3xl"
       >
@@ -159,11 +159,21 @@ function setModal(value: boolean) {
           `Results of ${
             weekInput?.id === activeWeek?.id
               ? " the current week"
-              : `${new Date(weekInput?.beginning).getDate()}/${
+              : `${new Date(weekInput?.beginning)
+                  .getDate()
+                  .toString()
+                  .padStart(2, "0")}/${(
                   new Date(weekInput?.beginning).getMonth() + 1
-                } - ${new Date(weekInput?.ending).getDate()}/${
+                )
+                  .toString()
+                  .padStart(2, "0")} - ${new Date(weekInput?.ending)
+                  .getDate()
+                  .toString()
+                  .padStart(2, "0")}/${(
                   new Date(weekInput?.ending).getMonth() + 1
-                }`
+                )
+                  .toString()
+                  .padStart(2, "0")}`
           }`
         }}
       </h1>
@@ -177,54 +187,69 @@ function setModal(value: boolean) {
         <select
           id="input"
           v-model="weekInput"
-          class="w-[350px] p-3 text-black focus:outline-none"
+          class="w-full sm:w-[350px] p-3 text-black focus:outline-none"
           @change="getActiveWeekVotes"
         >
           <option value="" disabled>Choose an option</option>
           <option v-for="week in allPrevWeeks" :key="week.id" :value="week">
             {{
-              `${new Date(week.beginning).getDate()}/${
-                new Date(week.beginning).getMonth() + 1
-              } - ${new Date(week.ending).getDate()}/${
-                new Date(week.ending).getMonth() + 1
-              }`
+              `${new Date(week.beginning)
+                .getDate()
+                .toString()
+                .padStart(2, "0")}/${(new Date(week.beginning).getMonth() + 1)
+                .toString()
+                .padStart(2, "0")} - ${new Date(week.ending)
+                .getDate()
+                .toString()
+                .padStart(2, "0")}/${(new Date(week.ending).getMonth() + 1)
+                .toString()
+                .padStart(2, "0")}`
             }}
           </option>
         </select>
       </div>
-      <div class="flex flex-wrap gap-20 mt-4 mb-20 items-center">
-        <NuxtLink
-          v-for="(d, index) in filteredVotes"
-          class="flex items-center w-full max-w-[520px] h-[400px] shadow px-10 py-5 justify-center"
+      <div class="flex flex-wrap gap-8 md:gap-20 mt-4 mb-20 items-center">
+        <div
+          v-for="d in filteredVotes"
+          class="flex items-center w-full max-w-[520px] h-[550px] border md:border-none rounded-lg md:shadow gap-3 md:gap-0 px-2 md:px-10 py-5 justify-center"
           :key="d.id"
           :to="`channels/${d.yt_username}`"
         >
           <h2
-            class="font-bold text-[150px] text-gray-900"
-            :class="[index === 0 ? 'w-[65px]' : 'w-[100px]']"
+            class="mt-[-60px] font-bold text-[100px] md:text-[150px] text-gray-900"
+            :class="[
+              d.position === 1 ? 'w-fit md:w-[85px]' : 'w-fit md:w-[100px]',
+            ]"
           >
             {{ d.position }}
           </h2>
-          <div class="flex flex-col">
+          <div class="flex items-center flex-col">
             <span
-              v-if="index === 0"
+              v-if="d.position === 1"
               class="italic font-bold text-xl text-gray-600 font-gloria mb-3"
               >best youtuber of the week!</span
             >
             <img
-              class="w-full max-w-[350px] h-full rounded-lg"
+              class="w-full max-w-[230px] h-full rounded-full"
+              :class="[d.position !== 1 && 'mt-12']"
               referrerpolicy="no-referrer"
               alt="Username pic"
               :src="d.yt_thumb"
             />
-            <div class="p-3 flex flex-col gap-2 rounded-lg">
+            <div class="p-3 flex flex-col items-center gap-2">
               <span class="font-gloria text-lg">{{ d.yt_username }}</span>
               <span class="mt-2 font-bold text-2xl">{{
                 `${d.count} ${d.count === 1 ? "vote" : "votes"}`
               }}</span>
             </div>
+            <NuxtLink
+              :to="`channels/${d.yt_id}`"
+              class="text-center mt-3 p-3 hover:bg-black hover:text-white transitin rounded-lg border border-black text-lg font-bold"
+            >
+              See channel's data
+            </NuxtLink>
           </div>
-        </NuxtLink>
+        </div>
       </div>
     </div>
 

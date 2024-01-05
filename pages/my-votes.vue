@@ -50,24 +50,30 @@ function filterVotesHistory() {
 
 <template>
   <div class="h-full">
-    <div class="flex flex-col pb-20 w-full max-w-6xl m-auto">
+    <div class="px-4 xl:px-4 flex flex-col pb-20 w-full max-w-6xl m-auto">
       <h1 class="mt-12 text-3xl font-gloria">My votes page</h1>
       <div class="mt-10 flex flex-col gap-2">
         <label for="input">Sort by week</label>
         <select
           id="input"
           v-model="weekInput"
-          class="w-[350px] p-3 text-black focus:outline-none"
+          class="w-full md:w-[350px] p-3 text-black focus:outline-none"
           @change="filterVotesHistory"
         >
           <option :value="null" disabled>Choose an option</option>
           <option v-for="week in allPrevWeeks" :key="week.id" :value="week">
             {{
-              `${new Date(week.beginning).getDate()}/${
-                new Date(week.beginning).getMonth() + 1
-              } - ${new Date(week.ending).getDate()}/${
-                new Date(week.ending).getMonth() + 1
-              }`
+              `${new Date(week.beginning)
+                .getDate()
+                .toString()
+                .padStart(2, "0")}/${(new Date(week.beginning).getMonth() + 1)
+                .toString()
+                .padStart(2, "0")} - ${new Date(week.ending)
+                .getDate()
+                .toString()
+                .padStart(2, "0")}/${(new Date(week.ending).getMonth() + 1)
+                .toString()
+                .padStart(2, "0")}`
             }}
           </option>
         </select>
@@ -76,26 +82,41 @@ function filterVotesHistory() {
         <div
           v-for="vote in filteredVotes"
           :key="vote.id"
-          class="bg-white shadow p-7 rounded-lg flex flex-col w-full max-w-[800px]"
+          class="bg-white border md:border-none md:shadow p-7 rounded-lg flex flex-col w-full max-w-[800px]"
         >
           <div class="flex flex-col gap-1">
             <span>Voting week</span>
             <h2 class="font-bold text-2xl mb-3">
               {{
-                `${new Date(vote.weeks.beginning).getDate()}/${
+                `${new Date(vote.weeks.beginning)
+                  .getDate()
+                  .toString()
+                  .padStart(2, "0")}/${(
                   new Date(vote.weeks.beginning).getMonth() + 1
-                }/${new Date(vote.weeks.beginning).getFullYear()} - ${new Date(
-                  vote.weeks.ending
-                ).getDate()}/${
+                )
+                  .toString()
+                  .padStart(2, "0")} - ${new Date(vote.weeks.ending)
+                  .getDate()
+                  .toString()
+                  .padStart(2, "0")}/${(
                   new Date(vote.weeks.ending).getMonth() + 1
-                }/${new Date(vote.weeks.ending).getFullYear()}`
+                )
+                  .toString()
+                  .padStart(2, "0")}`
               }}
               <span class="italic text-lg"
                 >(voted in
                 {{
-                  `${new Date(vote.created_at).getDate()}/${
+                  `${new Date(vote.created_at)
+                    .getDate()
+                    .toString()
+                    .padStart(2, "0")}/${(
                     new Date(vote.created_at).getMonth() + 1
-                  }/${new Date(vote.created_at).getFullYear()}`
+                  )
+                    .toString()
+                    .padStart(2, "0")}/${new Date(
+                    vote.created_at
+                  ).getFullYear()}`
                 }})</span
               >
             </h2>

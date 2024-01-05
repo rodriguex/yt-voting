@@ -53,19 +53,25 @@ function countdown() {
 <template>
   <modal :show="show" :setShow="setShow">
     <div class="w-full flex h-full">
-      <div class="crazyBg flex items-center justify-center p-10 rounded-s-md">
+      <div
+        class="hidden crazyBg sm:flex items-center justify-center p-10 rounded-s-md"
+      >
         <img
           src="~/assets/imgs/clock.png"
           alt="Cool clock image"
           class="w-[150px] h-fit"
         />
       </div>
-      <div class="w-full h-full flex items-center justify-center">
+      <div
+        class="crazyBg sm:bg-none sm:bg-white text-white sm:text-black w-full h-full flex items-center justify-center"
+      >
         <div class="flex flex-col items-center">
           <span class="font-gloria font-normal text-2xl mt-3"
             >This week is gonna end in:</span
           >
-          <div class="flex items-center mt-12 text-4xl gap-8">
+          <div
+            class="flex flex-col sm:flex-row items-center mt-12 text-2xl md:text-4xl gap-3 md:gap-8"
+          >
             <div class="flex flex-col items-center">
               <span>{{ countDays }}</span>
               <span>days</span>

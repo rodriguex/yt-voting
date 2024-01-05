@@ -9,7 +9,9 @@ const emits = defineEmits(["confirmVote"]);
 
 <template>
   <modal :show="show" :setShow="setShow">
-    <h1 class="font-bold text-3xl mt-32 text-center w-full max-w-[600px]">
+    <h1
+      class="font-bold text-3xl mt-32 text-center w-[95%] m-auto md:w-full max-w-[600px]"
+    >
       Are you sure you to want to vote in
       <span
         class="font-gloria border-b-4 border-double border-[#40c7a3] text-black"
