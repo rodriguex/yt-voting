@@ -17,11 +17,13 @@ const emits = defineEmits(["confirmVote"]);
       <span class="font-gloria font-bold text-black">{{ channelName }}</span
       >?
     </h1>
-    <img
-      :src="channelPic"
-      alt="Channel Picture"
-      class="w-[300px] mt-28 sm:hidden rounded-full"
-    />
+    <div class="h-full absolute top-0 flex items-center justify-center">
+      <img
+        :src="channelPic"
+        alt="Channel Picture"
+        class="w-[300px] sm:hidden rounded-full"
+      />
+    </div>
     <div class="absolute text-lg bottom-12 flex items-center gap-16">
       <button
         class="border-2 font-normal p-3 w-[150px] sm:w-[180px] rounded-lg border-black crazyBg text-white"
