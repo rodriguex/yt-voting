@@ -393,7 +393,7 @@ function setModal(value: boolean) {
             </div>
           </div>
         </div>
-        <span v-else class="font-bold text-2xl mt-8"
+        <span v-else class="block font-bold text-2xl mt-6"
           >No votes computed in the selected week</span
         >
       </div>
