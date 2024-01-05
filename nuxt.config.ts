@@ -29,6 +29,10 @@ export default defineNuxtConfig({
           name: "description",
           content: "A site to vote in yours best youtubers!",
         },
+        {
+          name: "viewport",
+          content: "width=device-width, initial-scale=1.0",
+        },
       ],
       link: [
         { rel: "preconnect", href: "https://fonts.googleapis.com" },

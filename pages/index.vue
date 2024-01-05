@@ -89,7 +89,7 @@ async function addVote() {
   data.push({
     user_id: user.value.id,
     week_id: activeWeek.value.id,
-    yt_id: vote.value.snippet.channelId,
+    yt_id: vote.value.id.channelId,
     yt_username: vote.value.snippet.channelTitle,
     yt_thumb: vote.value.snippet.thumbnails.high.url,
   });
