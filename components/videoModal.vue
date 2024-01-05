@@ -10,7 +10,7 @@ defineProps({
   <modal :show="show" :setShow="setShow" :hideCloseIconBigScreen="true">
     <iframe
       title="Iframe of the choosen channel video."
-      :src="`http://www.youtube.com/embed/${videoUrl}`"
+      :src="`https://www.youtube.com/embed/${videoUrl}`"
       width="100%"
       height="100%"
       allowfullscreen

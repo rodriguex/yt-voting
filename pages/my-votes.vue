@@ -26,7 +26,7 @@ onMounted(async () => {
     try {
       let req = await supabase
         .from("votes")
-        .select("*, weeks (id, beginning, ending, active)")
+        .select("*, weeks (id, beginning, ending)")
         .eq("user_id", user.value?.id)
         .order("id", { ascending: false });
 
