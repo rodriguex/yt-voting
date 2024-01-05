@@ -66,7 +66,7 @@ function countdown() {
         class="crazyBg sm:bg-none sm:bg-white text-white sm:text-black w-full h-full flex items-center justify-center"
       >
         <div class="flex flex-col items-center">
-          <span class="font-gloria font-normal text-2xl mt-3"
+          <span class="font-gloria text-2xl mt-3"
             >This week is gonna end in:</span
           >
           <div

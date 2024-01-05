@@ -23,12 +23,12 @@ onMounted(async () => {
   }
 
   if (alreadyVoted.value === true) {
-    // navigateTo("/alreadyVoted");
+    navigateTo("/alreadyVoted");
   } else if (alreadyVoted.value === null) {
     let userVotes = await getUserVotes(activeWeek.value.id, user.value.id);
     if (userVotes > 0) {
       alreadyVoted.value = true;
-      // navigateTo("/alreadyVoted");
+      navigateTo("/alreadyVoted");
     }
   }
 

@@ -38,7 +38,7 @@ export default defineNuxtConfig({
         },
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&family=Gloria+Hallelujah&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700&family=Gloria+Hallelujah&display=swap",
         },
       ],
     },

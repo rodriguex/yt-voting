@@ -24,7 +24,7 @@ onMounted(() => {
       <h1 class="text-6xl text-center md:text-start text-white">
         You already voted this week. Check out all
         <NuxtLink to="/results"
-          ><span class="font-gloria font-bold text-[#40c7a3] underline"
+          ><span class="font-gloria text-[#40c7a3] underline"
             >results</span
           ></NuxtLink
         >
