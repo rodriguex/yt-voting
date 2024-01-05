@@ -71,15 +71,15 @@ function confirmVote() {
 async function getData() {
   if (input.value) {
     isLoading.value = true;
-    let req: any = await $fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${input.value}&key=${config.public.GOOGLE_API_KEY}`
-    );
-    searchResults.value = req.items;
-    isLoading.value = false;
-    // setTimeout(() => {
-    //   searchResults.value = channelsListMock;
-    //   isLoading.value = false;
-    // }, 400);
+    // let req: any = await $fetch(
+    //   `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${input.value}&key=${config.public.GOOGLE_API_KEY}`
+    // );
+    // searchResults.value = req.items;
+    // isLoading.value = false;
+    setTimeout(() => {
+      searchResults.value = channelsListMock;
+      isLoading.value = false;
+    }, 400);
   }
 }
 
@@ -114,12 +114,12 @@ async function addVote() {
           <div class="flex items-center gap-5">
             <input
               id="input"
-              class="shadow text-gray-500 w-full focus:outline-none p-7 rounded-lg text-xl md:text-2xl"
+              class="shadow text-gray-500 w-full focus:outline-none p-7 rounded-lg text-xl md:text-xl"
               v-model="input"
               placeholder="My favorite youtube channel..."
             />
             <button
-              class="hidden hover:fill-[white] md:flex items-center justify-center gap-3 border-2 border-black shadow bg-white hover:bg-black hover:text-white p-4 w-[180px] text-xl rounded-lg font-bold"
+              class="hidden hover:fill-[white] md:flex items-center justify-center gap-3 border-2 border-black shadow bg-white hover:bg-black hover:text-white p-4 w-[180px] text-xl rounded-lg"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -155,14 +155,14 @@ async function addVote() {
           />
 
           <div class="p-3 flex flex-col gap-3">
-            <span class="font-bold text-xl text-black">{{
+            <span class="text-center text-xl text-black">{{
               result?.snippet?.channelTitle
             }}</span>
           </div>
 
           <NuxtLink
             :to="`channels/${result?.snippet?.channelId}`"
-            class="cursor-pointer flex items-center gap-3 justify-center fill-white text-center crazyBg text-white border-black p-2 font-bold w-[80%] rounded-lg text-xl lg:absolute lg:bottom-20 mb-5 lg:mb-0"
+            class="cursor-pointer flex items-center gap-3 justify-center fill-white text-center crazyBg text-white border-black p-2 w-[80%] rounded-lg text-xl lg:absolute lg:bottom-20 mb-5 lg:mb-0"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -178,7 +178,7 @@ async function addVote() {
           </NuxtLink>
 
           <button
-            class="cursor-pointer flex items-center gap-3 justify-center border hover:bg-black hover:text-white border-black p-2 font-bold w-[80%] hover:fill-white rounded-lg text-xl text-black lg:absolute lg:bottom-4 mb-5 lg:mb-0"
+            class="cursor-pointer flex items-center gap-3 justify-center border hover:bg-black hover:text-white border-black p-2 w-[80%] hover:fill-white rounded-lg text-xl text-black lg:absolute lg:bottom-4 mb-5 lg:mb-0"
             @click="addOrRemoveChannel(result)"
           >
             <svg

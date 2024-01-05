@@ -58,7 +58,7 @@ function handleOnSuccess(data: any) {
       </h2>
 
       <button
-        class="font-bold flex items-center gap-2 text-2xl font-dmSans mt-16 border-2 p-5 rounded-lg"
+        class="flex items-center gap-3 text-2xl mt-16 border-2 p-5 rounded-lg"
         @click="login"
       >
         <svg

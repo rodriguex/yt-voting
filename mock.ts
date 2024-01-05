@@ -7,7 +7,7 @@ export const channelsListMock = [
       channelTitle: "First search channel result",
       thumbnails: {
         high: {
-          url: "/image.jpg",
+          url: "https://yt3.ggpht.com/PINGWtLz0zIMmaNlImoftzFvCEDOHtiUrppJxTtOWAgomke5_ojI7XLxGMs5fEhoYB5bGWlz=s800-c-k-c0x00ffffff-no-rj",
         },
       },
     },
@@ -20,7 +20,7 @@ export const channelsListMock = [
       channelTitle: "Second search channel result",
       thumbnails: {
         high: {
-          url: "/image.jpg",
+          url: "https://yt3.ggpht.com/PINGWtLz0zIMmaNlImoftzFvCEDOHtiUrppJxTtOWAgomke5_ojI7XLxGMs5fEhoYB5bGWlz=s800-c-k-c0x00ffffff-no-rj",
         },
       },
     },
@@ -33,7 +33,7 @@ export const channelsListMock = [
       channelTitle: "Third search channel result",
       thumbnails: {
         high: {
-          url: "/image.jpg",
+          url: "https://yt3.ggpht.com/PINGWtLz0zIMmaNlImoftzFvCEDOHtiUrppJxTtOWAgomke5_ojI7XLxGMs5fEhoYB5bGWlz=s800-c-k-c0x00ffffff-no-rj",
         },
       },
     },
@@ -46,7 +46,7 @@ export const channelsListMock = [
       channelTitle: "Forth search channel result",
       thumbnails: {
         high: {
-          url: "/image.jpg",
+          url: "https://yt3.ggpht.com/PINGWtLz0zIMmaNlImoftzFvCEDOHtiUrppJxTtOWAgomke5_ojI7XLxGMs5fEhoYB5bGWlz=s800-c-k-c0x00ffffff-no-rj",
         },
       },
     },
@@ -59,7 +59,7 @@ export const channelsListMock = [
       channelTitle: "Fifth search channel result",
       thumbnails: {
         high: {
-          url: "/image.jpg",
+          url: "https://yt3.ggpht.com/PINGWtLz0zIMmaNlImoftzFvCEDOHtiUrppJxTtOWAgomke5_ojI7XLxGMs5fEhoYB5bGWlz=s800-c-k-c0x00ffffff-no-rj",
         },
       },
     },
@@ -72,7 +72,7 @@ export const channelsListMock = [
       channelTitle: "Sixth search channel result",
       thumbnails: {
         high: {
-          url: "/image.jpg",
+          url: "https://yt3.ggpht.com/PINGWtLz0zIMmaNlImoftzFvCEDOHtiUrppJxTtOWAgomke5_ojI7XLxGMs5fEhoYB5bGWlz=s800-c-k-c0x00ffffff-no-rj",
         },
       },
     },
@@ -85,7 +85,7 @@ export const channelsListMock = [
       channelTitle: "Seventh search channel result",
       thumbnails: {
         high: {
-          url: "/image.jpg",
+          url: "https://yt3.ggpht.com/PINGWtLz0zIMmaNlImoftzFvCEDOHtiUrppJxTtOWAgomke5_ojI7XLxGMs5fEhoYB5bGWlz=s800-c-k-c0x00ffffff-no-rj",
         },
       },
     },

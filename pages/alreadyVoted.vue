@@ -12,8 +12,8 @@ onMounted(() => {
 <template>
   <div
     v-if="alreadyVoted"
-    class="px-4 xl:px-0 absolute top-[100px] w-full flex items-center crazyBg justify-center"
-    style="height: calc(100% - 100px)"
+    class="px-4 xl:px-0 absolute top-[80px] w-full flex items-center crazyBg justify-center"
+    style="height: calc(100% - 80px)"
   >
     <div class="w-full max-w-4xl flex items-end gap-7">
       <img
@@ -24,7 +24,7 @@ onMounted(() => {
       <h1 class="text-6xl text-center md:text-start text-white">
         You already voted this week. Check out all
         <NuxtLink to="/results"
-          ><span class="font-gloria text-[#40c7a3] underline"
+          ><span class="font-gloria font-bold text-[#40c7a3] underline"
             >results</span
           ></NuxtLink
         >

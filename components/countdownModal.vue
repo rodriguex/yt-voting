@@ -70,7 +70,7 @@ function countdown() {
             >This week is gonna end in:</span
           >
           <div
-            class="flex flex-col sm:flex-row items-center mt-12 text-2xl md:text-4xl gap-3 md:gap-8"
+            class="flex flex-col sm:flex-row items-center mt-12 text-2xl md:text-3xl gap-3 md:gap-8 font-normal"
           >
             <div class="flex flex-col items-center">
               <span>{{ countDays }}</span>

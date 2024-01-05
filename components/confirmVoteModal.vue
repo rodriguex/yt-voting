@@ -20,13 +20,13 @@ const emits = defineEmits(["confirmVote"]);
     </h1>
     <div class="absolute text-lg bottom-12 flex items-center gap-16">
       <button
-        class="border-2 p-3 w-36 rounded-lg border-black crazyBg text-white"
+        class="border-2 font-normal p-3 w-[180px] rounded-lg border-black crazyBg text-white"
         @click="emits('confirmVote')"
       >
         Confirm vote
       </button>
       <button
-        class="border-2 p-3 w-36 rounded-lg border-red-800 text-red-800 hover:bg-red-800 hover:text-white"
+        class="border-2 p-3 w-[180px] font-normal rounded-lg border-red-800 text-red-800 hover:bg-red-800 hover:text-white"
         @click="setShow(false)"
       >
         Cancel

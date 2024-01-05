@@ -175,9 +175,7 @@ function setModal(value: boolean) {
           }`
         }}
       </h1>
-      <span
-        class="w-fit font-bold underline mt-10 cursor-pointer"
-        @click="setModal(true)"
+      <span class="w-fit underline mt-10 cursor-pointer" @click="setModal(true)"
         >When this week ends?</span
       >
       <div class="mt-10 flex flex-col gap-2">
@@ -234,17 +232,17 @@ function setModal(value: boolean) {
               alt="Username pic"
               :src="d.yt_thumb"
             />
-            <div class="p-3 flex flex-col items-center gap-2">
-              <span class="font-gloria text-lg">{{ d.yt_username }}</span>
+            <div class="p-3 mt-3 flex flex-col items-center gap-2">
+              <span class="font-gloria text-2xl">{{ d.yt_username }}</span>
               <span class="mt-2 font-bold text-2xl">{{
                 `${d.count} ${d.count === 1 ? "vote" : "votes"}`
               }}</span>
             </div>
             <NuxtLink
               :to="`channels/${d.yt_id}`"
-              class="text-center mt-3 p-3 hover:bg-black hover:text-white transitin rounded-lg border border-black text-lg font-bold"
+              class="text-center mt-3 p-3 hover:bg-black hover:text-white transitin rounded-lg border border-black text-lg"
             >
-              See channel's data
+              See channel's page
             </NuxtLink>
           </div>
         </div>

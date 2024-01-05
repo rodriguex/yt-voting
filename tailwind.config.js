@@ -12,7 +12,7 @@ module.exports = {
     extend: {},
     fontFamily: {
       gloria: ["Gloria Hallelujah", "cursive"],
-      dmSans: ["DM Sans", "cursive"],
+      poppins: ["Poppins", "cursive"],
     },
   },
   plugins: [],

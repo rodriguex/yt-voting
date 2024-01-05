@@ -31,15 +31,15 @@ onMounted(async () => {
       await allStore.getActiveWeek();
     }
     await getWeeks();
-    await getChannelData();
-    await getChannelStats();
-    await getChannelVideos();
+    // await getChannelData();
+    // await getChannelStats();
+    // await getChannelVideos();
     await getChannelVotes();
-    // setTimeout(() => {
-    //   channelData.value = channelPageDataMock;
-    //   channelVideos.value = channelVideosMock;
-    //   isLoading.value = false;
-    // }, 400);
+    setTimeout(() => {
+      channelData.value = channelPageDataMock;
+      channelVideos.value = channelVideosMock;
+      isLoading.value = false;
+    }, 400);
   } catch (err) {
     return err;
   }
@@ -292,9 +292,23 @@ function setModal(value: boolean) {
             @click="setupModal(video)"
           >
             <div
-              class="w-full md:w-[480px] rounded-t-lg h-[204px]"
+              class="relative w-full md:w-[480px] rounded-t-lg h-[204px]"
               :style="`background: url('${video.snippet.thumbnails.high.url}') center no-repeat`"
             ></div>
+            <div
+              class="absolute top-0 w-full h-[204px] flex items-center justify-center fill-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="40"
+                width="40"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9V344c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"
+                />
+              </svg>
+            </div>
             <div class="flex flex-col gap-1 px-3 pb-4">
               <span
                 class="max-w-[400px] font-bold text-xl line-clamp-2 overflow-hidden"

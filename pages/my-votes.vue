@@ -82,7 +82,7 @@ function filterVotesHistory() {
         <div
           v-for="vote in filteredVotes"
           :key="vote.id"
-          class="bg-white border md:border-none md:shadow p-7 rounded-lg flex flex-col w-full max-w-[800px]"
+          class="bg-white border md:border-none md:shadow p-7 rounded-xl flex flex-col w-full max-w-[700px]"
         >
           <div class="flex flex-col gap-1">
             <span>Voting week</span>
@@ -104,7 +104,7 @@ function filterVotesHistory() {
                   .toString()
                   .padStart(2, "0")}`
               }}
-              <span class="italic text-lg"
+              <span class="italic font-normal text-lg"
                 >(voted in
                 {{
                   `${new Date(vote.created_at)
