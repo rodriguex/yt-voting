@@ -5,14 +5,19 @@ import { setScrollBody } from "./../helpers/functions";
 const config = useRuntimeConfig();
 const supabase: any = useSupabaseClient();
 
-const input = ref("");
-const searchResults: any = ref([]);
-const vote: any = ref(null);
 const showModal = ref(false);
 const mainDiv = ref<any>(null);
 
 const allStore = useAllStore();
-const { user, activeWeek, alreadyVoted, isLoading } = storeToRefs(allStore);
+const {
+  searchInput,
+  searchResults,
+  vote,
+  user,
+  activeWeek,
+  alreadyVoted,
+  isLoading,
+} = storeToRefs(allStore);
 
 onMounted(async () => {
   if (!user.value) return;
@@ -25,7 +30,10 @@ onMounted(async () => {
   if (alreadyVoted.value === true) {
     // navigateTo("/alreadyVoted");
   } else if (alreadyVoted.value === null) {
-    let userVotes = await getUserVotes(activeWeek.value.id, user.value.id);
+    let userVotes = await allStore.getUserVotes(
+      activeWeek.value.id,
+      user.value.id
+    );
     if (userVotes > 0) {
       alreadyVoted.value = true;
       // navigateTo("/alreadyVoted");
@@ -35,23 +43,13 @@ onMounted(async () => {
   isLoading.value = false;
 });
 
-watch(input, () => {
-  if (!input.value) {
+watch(searchInput, () => {
+  if (!searchInput.value) {
     searchResults.value = [];
   }
 });
 
-async function getUserVotes(weekId: number, userId: any) {
-  let userVotes: any = await supabase
-    .from("votes")
-    .select("*")
-    .eq("week_id", weekId)
-    .eq("user_id", userId);
-
-  return userVotes.data.length ? userVotes.data.length : 0;
-}
-
-function addOrRemoveChannel(channel: any) {
+function voteInChannel(channel: any) {
   vote.value = channel;
   showModal.value = true;
   setScrollBody("remove");
@@ -65,11 +63,11 @@ function setModal(displayModal: boolean) {
 function confirmVote() {
   showModal.value = false;
   setScrollBody("add");
-  addVote();
+  allStore.addVote();
 }
 
 async function getData() {
-  if (input.value) {
+  if (searchInput.value) {
     isLoading.value = true;
     // let req: any = await $fetch(
     //   `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${input.value}&key=${config.public.GOOGLE_API_KEY}`
@@ -81,27 +79,6 @@ async function getData() {
       isLoading.value = false;
     }, 400);
   }
-}
-
-async function addVote() {
-  let data: any = [];
-
-  data.push({
-    user_id: user.value.id,
-    week_id: activeWeek.value.id,
-    yt_id: vote.value.id.channelId,
-    yt_username: vote.value.snippet.channelTitle,
-    yt_thumb: vote.value.snippet.thumbnails.high.url,
-  });
-
-  isLoading.value = true;
-  let insert = await supabase.from("votes").insert(data).select();
-  if (insert.status === 201) {
-    alreadyVoted.value = true;
-  }
-
-  isLoading.value = false;
-  navigateTo("/results");
 }
 </script>
 
@@ -115,7 +92,7 @@ async function addVote() {
             <input
               id="input"
               class="shadow text-gray-500 w-full focus:outline-none p-7 rounded-lg text-base md:text-xl"
-              v-model="input"
+              v-model="searchInput"
               placeholder="My favorite youtube channel..."
             />
             <button
@@ -162,7 +139,7 @@ async function addVote() {
           </div>
 
           <NuxtLink
-            :to="`channels/${result?.snippet?.channelId}`"
+            :to="`channels/${result?.id?.channelId}`"
             class="cursor-pointer flex items-center gap-3 justify-center fill-white text-center crazyBg text-white border-black p-2 w-[80%] rounded-lg text-xl lg:absolute lg:bottom-[74px] mb-1 lg:mb-0"
           >
             <svg
@@ -180,7 +157,7 @@ async function addVote() {
 
           <button
             class="cursor-pointer flex items-center gap-3 justify-center border hover:bg-black hover:text-white border-black p-2 w-[80%] hover:fill-white rounded-lg text-xl text-black lg:absolute lg:bottom-4 mb-5 lg:mb-0"
-            @click="addOrRemoveChannel(result)"
+            @click="voteInChannel(result)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

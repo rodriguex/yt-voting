@@ -207,7 +207,7 @@ function setModal(value: boolean) {
       <div class="flex flex-wrap gap-8 md:gap-20 mt-4 mb-20 items-center">
         <div
           v-for="d in filteredVotes"
-          class="flex items-center w-full max-w-[520px] h-[550px] border md:border-none rounded-lg md:shadow gap-3 md:gap-0 px-2 md:px-10 py-5 justify-center"
+          class="flex bg-white lg:bg-transparent items-center w-full max-w-[520px] h-[550px] border md:border-none rounded-lg md:shadow gap-3 md:gap-0 px-2 md:px-10 py-5 justify-center"
           :key="d.id"
           :to="`channels/${d.yt_username}`"
         >

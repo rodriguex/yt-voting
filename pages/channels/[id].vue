@@ -14,11 +14,13 @@ const weekList = ref<any>([]);
 const weekInput = ref<any>(null);
 const showMoreText = ref(false);
 
-const showModal = ref(false);
+const showConfirmModal = ref(false);
+const showVideoModal = ref(false);
 const currentVideoUrl = ref("");
 
 const allStore = useAllStore();
-const { activeWeek, isLoading } = storeToRefs(allStore);
+const { user, vote, activeWeek, isLoading, alreadyVoted } =
+  storeToRefs(allStore);
 
 onMounted(async () => {
   let mainDiv = document.getElementById("__nuxt");
@@ -30,6 +32,16 @@ onMounted(async () => {
   try {
     if (!activeWeek.value) {
       await allStore.getActiveWeek();
+    }
+
+    if (alreadyVoted.value === null) {
+      let userVotes = await allStore.getUserVotes(
+        activeWeek.value.id,
+        user.value.id
+      );
+      if (userVotes > 0) {
+        alreadyVoted.value = true;
+      }
     }
     await getWeeks();
     // await getChannelData();
@@ -203,13 +215,38 @@ function formatNumbers(value: number) {
 
 function setupModal(video: any) {
   currentVideoUrl.value = video.id.videoId;
-  showModal.value = true;
+  showVideoModal.value = true;
   setScrollBody("remove");
 }
 
-function setModal(value: boolean) {
-  showModal.value = value;
+function setVideoModal(value: boolean) {
+  showVideoModal.value = value;
   setScrollBody("add");
+}
+
+function setConfirmModal(value: boolean) {
+  showConfirmModal.value = value;
+  setScrollBody("add");
+}
+
+function voteInChannel() {
+  vote.value = {
+    id: {
+      channelId: id,
+    },
+    snippet: {
+      channelTitle: channelData.value.title,
+      thumbnails: { high: { url: channelData.value.thumbnails.high.url } },
+    },
+  };
+  showConfirmModal.value = true;
+  setScrollBody("remove");
+}
+
+function confirmVote() {
+  showConfirmModal.value = false;
+  setScrollBody("add");
+  allStore.addVote();
 }
 </script>
 
@@ -227,12 +264,29 @@ function setModal(value: boolean) {
           class="mt-10 flex flex-col lg:flex-row border bg-white border-gray-200 w-full sm:w-[85%] sm:mx-auto lg:mx-0 lg:w-full rounded-lg"
         >
           <div
-            class="pb-8 border-b-2 lg:pb-0 lg:border-b-none lg:border-r-2 border-gray-100 flex items-center justify-center lg:pr-8"
+            class="flex-col gap-2 pb-8 border-b-2 lg:pb-0 lg:border-b-none lg:border-r-2 border-gray-100 flex items-center justify-center px-8"
           >
+            <button
+              v-if="!alreadyVoted"
+              class="mt-10 lg:mb-6 cursor-pointer flex items-center gap-3 justify-center border hover:bg-black hover:text-white border-black p-2 w-[60%] max-w-[250px] hover:fill-white rounded-lg text-xl text-black"
+              @click="voteInChannel"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="20"
+                width="20"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"
+                />
+              </svg>
+              <span>Vote</span>
+            </button>
             <img
               :src="channelData.thumbnails.high.url"
               alt="Channel picture"
-              class="mt-10 lg:mt-0 w-[250px] h-[250px] ml-6 self-center rounded-full"
+              class="mt-10 lg:mt-0 w-[250px] h-[250px] self-center rounded-full"
               referrerpolicy="no-referrer"
             />
           </div>
@@ -399,10 +453,19 @@ function setModal(value: boolean) {
       </div>
 
       <VideoModal
-        :show="showModal"
-        :setShow="setModal"
+        :show="showVideoModal"
+        :setShow="setVideoModal"
         :videoUrl="currentVideoUrl"
         :hideCloseIconBigScreen="true"
+      />
+
+      <ConfirmVoteModal
+        v-if="showConfirmModal"
+        :show="showConfirmModal"
+        :channelName="channelData.title"
+        :channelPic="channelData.thumbnails.high.url"
+        :setShow="setConfirmModal"
+        @confirmVote="confirmVote"
       />
     </div>
   </ClientOnly>

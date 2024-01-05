@@ -3,9 +3,12 @@ export const useAllStore = defineStore("all", () => {
 
   const user = ref<any>(null);
   const activeWeek = ref<any>(null);
+  const vote = ref<any>(null);
   const alreadyVoted = ref<any>(null);
   const isLoading = ref(false);
   const scrollTop = ref(0);
+  const searchInput = ref("");
+  const searchResults = ref<any>([]);
 
   async function getActiveWeek() {
     let today = new Date();
@@ -43,6 +46,37 @@ export const useAllStore = defineStore("all", () => {
     }
   }
 
+  async function addVote() {
+    let data: any = [];
+
+    data.push({
+      user_id: user.value.id,
+      week_id: activeWeek.value.id,
+      yt_id: vote.value.id.channelId,
+      yt_username: vote.value.snippet.channelTitle,
+      yt_thumb: vote.value.snippet.thumbnails.high.url,
+    });
+
+    isLoading.value = true;
+    let insert = await supabase.from("votes").insert(data).select();
+    if (insert.status === 201) {
+      alreadyVoted.value = true;
+    }
+
+    isLoading.value = false;
+    navigateTo("/results");
+  }
+
+  async function getUserVotes(weekId: number, userId: any) {
+    let userVotes: any = await supabase
+      .from("votes")
+      .select("*")
+      .eq("week_id", weekId)
+      .eq("user_id", userId);
+
+    return userVotes.data.length ? userVotes.data.length : 0;
+  }
+
   return {
     user,
     activeWeek,
@@ -50,5 +84,10 @@ export const useAllStore = defineStore("all", () => {
     getActiveWeek,
     isLoading,
     scrollTop,
+    vote,
+    addVote,
+    getUserVotes,
+    searchInput,
+    searchResults,
   };
 });
