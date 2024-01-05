@@ -12,6 +12,7 @@ const channelHistory = ref<any>(null);
 
 const weekList = ref<any>([]);
 const weekInput = ref<any>(null);
+const showMoreText = ref(false);
 
 const showModal = ref(false);
 const currentVideoUrl = ref("");
@@ -219,42 +220,54 @@ function setModal(value: boolean) {
       class="px-4 xl:px-0 flex flex-col w-full max-w-6xl m-auto pb-20"
     >
       <div class="mt-10">
-        <h1 class="font-bold text-center md:text-start text-5xl">
+        <h1 class="font-bold text-center lg:text-start text-5xl">
           {{ channelData.title }}
         </h1>
         <div
-          class="mt-10 flex flex-col md:flex-row border bg-white border-gray-200 w-full md:max-w-[1000px] rounded-lg"
+          class="mt-10 flex flex-col lg:flex-row border bg-white border-gray-200 w-full sm:w-[85%] sm:mx-auto lg:mx-0 lg:w-full rounded-lg"
         >
-          <img
-            :src="channelData.thumbnails.high.url"
-            alt="Channel picture"
-            class="w-full md:w-[300px] rounded-t-lg md:rounded-s-lg"
-            referrerpolicy="no-referrer"
-          />
-          <div class="flex flex-col gap-3 justify-center text-lg mx-5 py-2">
+          <div
+            class="pb-8 border-b-2 lg:pb-0 lg:border-b-none lg:border-r-2 border-gray-100 flex items-center justify-center lg:pr-8"
+          >
+            <img
+              :src="channelData.thumbnails.high.url"
+              alt="Channel picture"
+              class="mt-10 lg:mt-0 w-[250px] h-[250px] ml-6 self-center rounded-full"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+          <div
+            class="mt-8 lg:mt-0 flex flex-col gap-3 justify-center text-lg px-10 py-6"
+          >
             <div class="flex flex-col gap-1">
-              <span class="font-bold">Description:</span>
+              <span class="font-bold">Description</span>
               <span
-                class="max-w-[600px] line-clamp-2 overflow-hidden text-ellipsis"
+                class="max-w-[600px]"
+                :class="[
+                  showMoreText
+                    ? 'line-clamp-none overflow-auto'
+                    : 'line-clamp-2 overflow-hidden',
+                ]"
+                @click="showMoreText = !showMoreText"
                 >{{ decodeHtml(channelData.description) }}</span
               >
             </div>
-            <div class="flex gap-2">
-              <span class="font-bold">Subscribers:</span>
+            <div class="flex flex-col gap-1">
+              <span class="font-bold">Subscribers</span>
               <span>{{
                 formatNumbers(channelData.stats.subscriberCount)
               }}</span>
             </div>
-            <div class="flex gap-2">
-              <span class="font-bold">Total Videos:</span>
+            <div class="flex flex-col gap-1">
+              <span class="font-bold">Total Videos</span>
               <span>{{ formatNumbers(channelData.stats.videoCount) }}</span>
             </div>
-            <div class="flex gap-2">
-              <span class="font-bold">Total views:</span>
+            <div class="flex flex-col gap-1">
+              <span class="font-bold">Total views</span>
               <span>{{ formatNumbers(channelData.stats.viewCount) }}</span>
             </div>
-            <div class="flex gap-2">
-              <span class="font-bold">Youtube url:</span>
+            <div class="flex flex-col gap-1">
+              <span class="font-bold">Youtube url</span>
               <a
                 class="underline text-blue-700"
                 target="_blank"
@@ -262,8 +275,8 @@ function setModal(value: boolean) {
                 >{{ `youtube.com/${channelData.customUrl}` }}</a
               >
             </div>
-            <div class="flex gap-2">
-              <span class="font-bold">Created at:</span>
+            <div class="flex flex-col gap-1">
+              <span class="font-bold">Created at</span>
               <span>{{
                 `${(new Date(channelData.publishedAt).getMonth() + 1)
                   .toString()
@@ -278,12 +291,15 @@ function setModal(value: boolean) {
           </div>
         </div>
       </div>
-      <div class="mt-16">
-        <h2 class="font-bold text-5xl text-center md:text-start">
+
+      <div
+        class="mt-16 px-10 w-full sm:w-[85%] lg:w-full bg-white border border-gray-200 py-8 rounded-lg mx-auto lg:mx-0"
+      >
+        <h2 class="font-bold text-5xl text-center lg:text-start">
           Latest Videos
         </h2>
         <div
-          class="mt-10 flex justify-center md:justify-normal flex-wrap gap-8"
+          class="mt-10 flex justify-center lg:justify-normal flex-wrap gap-8"
         >
           <div
             v-for="(video, index) in channelVideos"
@@ -331,62 +347,56 @@ function setModal(value: boolean) {
           </div>
         </div>
       </div>
-      <div class="mt-12 flex flex-col gap-5">
-        <h1 class="text-4xl text-center md:text-start">
+
+      <div
+        class="mt-14 w-full sm:w-[85%] lg:w-full px-10 rounded-lg py-8 mx-auto lg:mx-0 bg-white border border-gray-200"
+      >
+        <h1 class="mx-auto text-4xl text-start">
           <span class="font-bold">{{ channelData.title }}</span>
           votes history
         </h1>
-      </div>
-      <div class="flex flex-col gap-1 w-full md:w-[400px] mt-10">
-        <label for="input">Sort by week</label>
-        <select
-          id="input"
-          v-model="weekInput"
-          class="focus:outline-none p-3"
-          @change="getChannelPosition"
-        >
-          <option :value="null" disabled>Select an option</option>
-          <option v-for="week in weekList" :key="week.id" :value="week">
-            {{
-              `${new Date(week.beginning)
-                .getDate()
-                .toString()
-                .padStart(2, "0")}/${(new Date(week.beginning).getMonth() + 1)
-                .toString()
-                .padStart(2, "0")} - ${new Date(week.ending)
-                .getDate()
-                .toString()
-                .padStart(2, "0")}/${(new Date(week.ending).getMonth() + 1)
-                .toString()
-                .padStart(2, "0")}`
-            }}
-          </option>
-        </select>
-      </div>
-      <div
-        v-if="channelHistory"
-        class="mt-8 border md:border-none rounded-lg md:shadow w-full md:w-[400px] flex flex-col"
-      >
-        <img
-          :src="channelData.thumbnails.high.url"
-          alt="Channel's Thumb"
-          class="w-full rounded"
-          referrerpolicy="no-referrer"
-        />
-        <div class="p-4">
-          <div class="mt-5 flex items-center text-3xl">
-            <h2 class="font-bold">Position:</h2>
-            <span class="ml-2">{{ channelHistory?.position }}</span>
-          </div>
-          <div class="mt-5 flex text-3xl items-center">
-            <h2 class="font-bold">Votes:</h2>
-            <span class="ml-2">{{ channelHistory?.count }}</span>
+        <div class="flex flex-col gap-1 mx-auto lg:mx-0 lg:w-[400px] mt-10">
+          <label for="input">Sort by week</label>
+          <select
+            id="input"
+            v-model="weekInput"
+            class="focus:outline-none p-3"
+            @change="getChannelPosition"
+          >
+            <option :value="null" disabled>Select an option</option>
+            <option v-for="week in weekList" :key="week.id" :value="week">
+              {{
+                `${new Date(week.beginning)
+                  .getDate()
+                  .toString()
+                  .padStart(2, "0")}/${(new Date(week.beginning).getMonth() + 1)
+                  .toString()
+                  .padStart(2, "0")} - ${new Date(week.ending)
+                  .getDate()
+                  .toString()
+                  .padStart(2, "0")}/${(new Date(week.ending).getMonth() + 1)
+                  .toString()
+                  .padStart(2, "0")}`
+              }}
+            </option>
+          </select>
+        </div>
+        <div v-if="channelHistory" class="mt-2 mx-auto lg:mx-0 flex flex-col">
+          <div class="p-4">
+            <div class="mt-5 flex items-center text-3xl">
+              <h2 class="font-bold">Position:</h2>
+              <span class="ml-2">{{ channelHistory?.position }}</span>
+            </div>
+            <div class="mt-5 flex text-3xl items-center">
+              <h2 class="font-bold">Votes:</h2>
+              <span class="ml-2">{{ channelHistory?.count }}</span>
+            </div>
           </div>
         </div>
+        <span v-else class="font-bold text-2xl mt-8"
+          >No votes computed in the selected week</span
+        >
       </div>
-      <span v-else class="font-bold text-2xl mt-8"
-        >No votes computed in the selected week</span
-      >
 
       <VideoModal
         :show="showModal"

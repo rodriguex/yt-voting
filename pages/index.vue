@@ -114,7 +114,7 @@ async function addVote() {
           <div class="flex items-center gap-5">
             <input
               id="input"
-              class="shadow text-gray-500 w-full focus:outline-none p-7 rounded-lg text-xl md:text-xl"
+              class="shadow text-gray-500 w-full focus:outline-none p-7 rounded-lg text-base md:text-xl"
               v-model="input"
               placeholder="My favorite youtube channel..."
             />
@@ -155,14 +155,15 @@ async function addVote() {
           />
 
           <div class="p-3 flex flex-col gap-3">
-            <span class="text-center text-xl text-black">{{
-              result?.snippet?.channelTitle
-            }}</span>
+            <span
+              class="h-[50px] overflow-hidden line-clamp-2 text-center text-xl text-black"
+              >{{ result?.snippet?.channelTitle }}</span
+            >
           </div>
 
           <NuxtLink
             :to="`channels/${result?.snippet?.channelId}`"
-            class="cursor-pointer flex items-center gap-3 justify-center fill-white text-center crazyBg text-white border-black p-2 w-[80%] rounded-lg text-xl lg:absolute lg:bottom-20 mb-5 lg:mb-0"
+            class="cursor-pointer flex items-center gap-3 justify-center fill-white text-center crazyBg text-white border-black p-2 w-[80%] rounded-lg text-xl lg:absolute lg:bottom-[74px] mb-1 lg:mb-0"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -201,6 +202,7 @@ async function addVote() {
       v-if="showModal"
       :show="showModal"
       :channelName="vote.snippet.channelTitle"
+      :channelPic="vote.snippet.thumbnails.high.url"
       :setShow="setModal"
       @confirmVote="confirmVote"
     />
