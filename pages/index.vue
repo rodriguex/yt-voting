@@ -114,7 +114,7 @@ async function addVote() {
           <div class="flex items-center gap-5">
             <input
               id="input"
-              class="font-bold shadow text-gray-500 w-full focus:outline-none p-7 rounded-lg text-xl md:text-2xl"
+              class="shadow text-gray-500 w-full focus:outline-none p-7 rounded-lg text-xl md:text-2xl"
               v-model="input"
               placeholder="My favorite youtube channel..."
             />

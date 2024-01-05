@@ -152,9 +152,7 @@ function setModal(value: boolean) {
 <template>
   <div class="w-full h-full">
     <div class="px-4 xl:px-0 flex flex-col w-full max-w-6xl m-auto">
-      <h1
-        class="mt-12 pb-4 font-gloria w-fit m-auto border-double border-[#40c7a3] border-b-4 text-3xl"
-      >
+      <h1 class="mt-12 pb-4 font-gloria w-fit m-auto text-3xl">
         {{
           `Results of ${
             weekInput?.id === activeWeek?.id
