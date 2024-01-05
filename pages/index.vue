@@ -77,7 +77,7 @@ async function getData() {
     searchResults.value = req.items;
     isLoading.value = false;
     // setTimeout(() => {
-    //   searchResults.value = channelsList;
+    //   searchResults.value = channelsListMock;
     //   isLoading.value = false;
     // }, 400);
   }

@@ -74,15 +74,15 @@ function countdown() {
           >
             <div class="flex flex-col items-center">
               <span>{{ countDays }}</span>
-              <span>days</span>
+              <span>{{ countDays <= 1 ? "day" : "days" }}</span>
             </div>
             <div class="flex flex-col items-center">
               <span>{{ countHours }}</span>
-              <span>hours</span>
+              <span>{{ countHours < 1 ? "hour" : "hours" }}</span>
             </div>
             <div class="flex flex-col items-center">
               <span>{{ countMinutes }}</span>
-              <span>minutes</span>
+              <span>{{ countMinutes <= 1 ? "minute" : "minutes" }}</span>
             </div>
             <div class="flex flex-col items-center">
               <span>{{ countSeconds }}</span>

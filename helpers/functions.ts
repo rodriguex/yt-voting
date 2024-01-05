@@ -11,3 +11,9 @@ export function setScrollBody(option: string) {
     }
   }
 }
+
+export function decodeHtml(value: any) {
+  let txt = document.createElement("textarea");
+  txt.innerHTML = value;
+  return txt.value;
+}

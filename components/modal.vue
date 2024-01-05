@@ -2,6 +2,7 @@
 defineProps({
   show: { type: Boolean },
   setShow: { type: Function, default: () => {} },
+  hideCloseIconBigScreen: { type: Boolean, default: false },
 });
 
 const allStore = useAllStore();
@@ -23,7 +24,8 @@ const { scrollTop } = storeToRefs(allStore);
           width="30"
           height="30"
           viewBox="0 0 24 24"
-          class="text-white sm:text-red-700 absolute right-10 top-8 cursor-pointer"
+          :class="[hideCloseIconBigScreen ? 'absolute sm:hidden' : 'absolute']"
+          class="text-white sm:text-red-700 right-10 top-[60px] cursor-pointer"
           @click="setShow(false)"
         >
           <path
