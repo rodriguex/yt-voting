@@ -26,7 +26,7 @@ const emits = defineEmits(["confirmVote"]);
     </div>
     <div class="absolute text-lg bottom-12 flex items-center gap-16">
       <button
-        class="border-2 font-normal p-3 w-[150px] sm:w-[180px] rounded-lg border-black crazyBg text-white"
+        class="border-2 font-normal p-3 w-[150px] sm:w-[180px] rounded-lg crazyBg text-white"
         @click="emits('confirmVote')"
       >
         Confirm vote

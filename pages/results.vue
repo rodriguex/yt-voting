@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { setScrollBody } from "~/helpers/functions";
+import { formatDate, setScrollBody } from "~/helpers/functions";
 
 const supabase = useSupabaseClient();
 
@@ -157,21 +157,9 @@ function setModal(value: boolean) {
           `Results of ${
             weekInput?.id === activeWeek?.id
               ? " the current week"
-              : `${new Date(weekInput?.beginning)
-                  .getDate()
-                  .toString()
-                  .padStart(2, "0")}/${(
-                  new Date(weekInput?.beginning).getMonth() + 1
-                )
-                  .toString()
-                  .padStart(2, "0")} - ${new Date(weekInput?.ending)
-                  .getDate()
-                  .toString()
-                  .padStart(2, "0")}/${(
-                  new Date(weekInput?.ending).getMonth() + 1
-                )
-                  .toString()
-                  .padStart(2, "0")}`
+              : `${formatDate(weekInput?.beginning)} / ${formatDate(
+                  weekInput?.ending
+                )}`
           }`
         }}
       </h1>
@@ -188,19 +176,7 @@ function setModal(value: boolean) {
         >
           <option value="" disabled>Choose an option</option>
           <option v-for="week in allPrevWeeks" :key="week.id" :value="week">
-            {{
-              `${new Date(week.beginning)
-                .getDate()
-                .toString()
-                .padStart(2, "0")}/${(new Date(week.beginning).getMonth() + 1)
-                .toString()
-                .padStart(2, "0")} - ${new Date(week.ending)
-                .getDate()
-                .toString()
-                .padStart(2, "0")}/${(new Date(week.ending).getMonth() + 1)
-                .toString()
-                .padStart(2, "0")}`
-            }}
+            {{ `${formatDate(week.beginning)} / ${formatDate(week.ending)}` }}
           </option>
         </select>
       </div>
@@ -233,7 +209,9 @@ function setModal(value: boolean) {
               :src="d.yt_thumb"
             />
             <div class="p-3 mt-3 flex flex-col items-center gap-2">
-              <span class="font-gloria text-2xl">{{ d.yt_username }}</span>
+              <span class="font-gloria text-center text-2xl">{{
+                d.yt_username
+              }}</span>
               <span class="mt-2 font-bold text-2xl">{{
                 `${d.count} ${d.count === 1 ? "vote" : "votes"}`
               }}</span>

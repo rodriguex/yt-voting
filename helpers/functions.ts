@@ -17,3 +17,12 @@ export function decodeHtml(value: any) {
   txt.innerHTML = value;
   return txt.value;
 }
+
+export function formatDate(date: any) {
+  return `${(new Date(date).getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${new Date(date)
+    .getDate()
+    .toString()
+    .padStart(2, "0")}-${new Date(date).getFullYear()}`;
+}

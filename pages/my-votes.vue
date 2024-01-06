@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { formatDate } from "~/helpers/functions";
+
 const allStore = useAllStore();
 const { user, activeWeek, isLoading } = storeToRefs(allStore);
 
@@ -62,19 +64,7 @@ function filterVotesHistory() {
         >
           <option :value="null" disabled>Choose an option</option>
           <option v-for="week in allPrevWeeks" :key="week.id" :value="week">
-            {{
-              `${new Date(week.beginning)
-                .getDate()
-                .toString()
-                .padStart(2, "0")}/${(new Date(week.beginning).getMonth() + 1)
-                .toString()
-                .padStart(2, "0")} - ${new Date(week.ending)
-                .getDate()
-                .toString()
-                .padStart(2, "0")}/${(new Date(week.ending).getMonth() + 1)
-                .toString()
-                .padStart(2, "0")}`
-            }}
+            {{ `${formatDate(week.beginning)} / ${formatDate(week.ending)}` }}
           </option>
         </select>
       </div>
@@ -84,47 +74,23 @@ function filterVotesHistory() {
           :key="vote.id"
           class="bg-white border md:border-none md:shadow p-7 rounded-xl flex flex-col w-full max-w-[700px]"
         >
-          <div class="flex flex-col gap-1">
+          <div class="flex flex-col">
             <span>Voting week</span>
-            <h2 class="font-bold text-2xl mb-3">
+            <h2 class="font-bold text-2xl mt-2">
               {{
-                `${new Date(vote.weeks.beginning)
-                  .getDate()
-                  .toString()
-                  .padStart(2, "0")}/${(
-                  new Date(vote.weeks.beginning).getMonth() + 1
-                )
-                  .toString()
-                  .padStart(2, "0")} - ${new Date(vote.weeks.ending)
-                  .getDate()
-                  .toString()
-                  .padStart(2, "0")}/${(
-                  new Date(vote.weeks.ending).getMonth() + 1
-                )
-                  .toString()
-                  .padStart(2, "0")}`
+                `${formatDate(vote.weeks.beginning)} / ${formatDate(
+                  vote.weeks.ending
+                )}`
               }}
-              <span class="italic font-normal text-lg"
-                >(voted in
-                {{
-                  `${new Date(vote.created_at)
-                    .getDate()
-                    .toString()
-                    .padStart(2, "0")}/${(
-                    new Date(vote.created_at).getMonth() + 1
-                  )
-                    .toString()
-                    .padStart(2, "0")}/${new Date(
-                    vote.created_at
-                  ).getFullYear()}`
-                }})</span
-              >
             </h2>
+            <span class="italic font-normal text-lg"
+              >(voted in {{ `${formatDate(vote.created_at)}` }})</span
+            >
           </div>
           <img
             :src="vote.yt_thumb"
             alt="Channel Picture"
-            class="w-[300px] rounded-lg"
+            class="w-[300px] rounded-lg mt-4"
           />
           <span class="mt-4 text-xl font-gloria">{{ vote.yt_username }}</span>
         </div>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { decodeHtml, setScrollBody } from "~/helpers/functions";
+import { decodeHtml, formatDate, setScrollBody } from "~/helpers/functions";
 import { channelPageDataMock, channelVideosMock } from "./../../mock";
 
 const config = useRuntimeConfig();
@@ -331,16 +331,7 @@ function confirmVote() {
             </div>
             <div class="flex flex-col gap-1">
               <span class="font-bold">Created at</span>
-              <span>{{
-                `${(new Date(channelData.publishedAt).getMonth() + 1)
-                  .toString()
-                  .padStart(2, "0")}-${new Date(channelData.publishedAt)
-                  .getDate()
-                  .toString()
-                  .padStart(2, "0")}-${new Date(
-                  channelData.publishedAt
-                ).getFullYear()}`
-              }}</span>
+              <span>{{ `${formatDate(channelData.publishedAt)}` }}</span>
             </div>
           </div>
         </div>
@@ -386,16 +377,7 @@ function confirmVote() {
               >
               <span class="mt-3 absolute bottom-5"
                 >Published at:
-                {{
-                  `${(new Date(video.snippet.publishedAt).getMonth() + 1)
-                    .toString()
-                    .padStart(2, "0")}-${new Date(video.snippet.publishedAt)
-                    .getDate()
-                    .toString()
-                    .padStart(2, "0")}-${new Date(
-                    video.snippet.publishedAt
-                  ).getFullYear()}`
-                }}</span
+                {{ `${formatDate(video.snippet.publishedAt)}` }}</span
               >
             </div>
           </div>
@@ -419,32 +401,18 @@ function confirmVote() {
           >
             <option :value="null" disabled>Select an option</option>
             <option v-for="week in weekList" :key="week.id" :value="week">
-              {{
-                `${new Date(week.beginning)
-                  .getDate()
-                  .toString()
-                  .padStart(2, "0")}/${(new Date(week.beginning).getMonth() + 1)
-                  .toString()
-                  .padStart(2, "0")} - ${new Date(week.ending)
-                  .getDate()
-                  .toString()
-                  .padStart(2, "0")}/${(new Date(week.ending).getMonth() + 1)
-                  .toString()
-                  .padStart(2, "0")}`
-              }}
+              {{ `${formatDate(week.beginning)} / ${formatDate(week.ending)}` }}
             </option>
           </select>
         </div>
         <div v-if="channelHistory" class="mt-2 mx-auto lg:mx-0 flex flex-col">
-          <div class="p-4">
-            <div class="mt-5 flex items-center text-3xl">
-              <h2 class="font-bold">Position:</h2>
-              <span class="ml-2">{{ channelHistory?.position }}</span>
-            </div>
-            <div class="mt-5 flex text-3xl items-center">
-              <h2 class="font-bold">Votes:</h2>
-              <span class="ml-2">{{ channelHistory?.count }}</span>
-            </div>
+          <div class="mt-5 flex items-center text-3xl">
+            <h2 class="font-bold">Position:</h2>
+            <span class="ml-2">{{ channelHistory?.position }}</span>
+          </div>
+          <div class="mt-5 flex text-3xl items-center">
+            <h2 class="font-bold">Votes:</h2>
+            <span class="ml-2">{{ channelHistory?.count }}</span>
           </div>
         </div>
         <span v-else class="block font-bold text-2xl mt-6"
