@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+const router = useRoute();
 const allStore = useAllStore();
 const { user } = storeToRefs(allStore);
 const userMenu = ref(false);
@@ -19,12 +20,29 @@ async function logout() {
       <div
         class="w-full m-auto max-w-6xl flex items-center py-3 justify-between relative"
       >
-        <NuxtLink
-          to="/"
-          class="font-bold text-2xl border-b-4 border-double border-[#40c7a3] pb-1"
-        >
-          YT Voting
-        </NuxtLink>
+        <div class="flex items-center gap-8">
+          <NuxtLink
+            to="/"
+            class="text-xl md:text-2xl font-gloria cursor-pointer border-b-4"
+            :class="[
+              router.path === '/'
+                ? 'border-[#40c7a3] font-bold'
+                : 'border-transparent',
+            ]"
+          >
+            YT Voting
+          </NuxtLink>
+          <NuxtLink
+            to="/about"
+            class="text-xl md:text-2xl font-gloria cursor-pointer border-b-4"
+            :class="[
+              router.path === '/about'
+                ? 'border-[#40c7a3] font-bold'
+                : 'border-transparent',
+            ]"
+            >About</NuxtLink
+          >
+        </div>
         <img
           alt="User Picture"
           class="cursor-pointer rounded-full w-[60px]"
