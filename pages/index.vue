@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import { channelsListMock } from "./../mock";
 import { setScrollBody } from "./../helpers/functions";
 
 const config = useRuntimeConfig();
-const supabase: any = useSupabaseClient();
 
 const showModal = ref(false);
 const mainDiv = ref<any>(null);
@@ -28,7 +26,7 @@ onMounted(async () => {
   }
 
   if (alreadyVoted.value === true) {
-    // navigateTo("/alreadyVoted");
+    navigateTo("/alreadyVoted");
   } else if (alreadyVoted.value === null) {
     let userVotes = await allStore.getUserVotes(
       activeWeek.value.id,
@@ -36,7 +34,7 @@ onMounted(async () => {
     );
     if (userVotes > 0) {
       alreadyVoted.value = true;
-      // navigateTo("/alreadyVoted");
+      navigateTo("/alreadyVoted");
     }
   }
 
@@ -69,15 +67,11 @@ function confirmVote() {
 async function getData() {
   if (searchInput.value) {
     isLoading.value = true;
-    // let req: any = await $fetch(
-    //   `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${input.value}&key=${config.public.GOOGLE_API_KEY}`
-    // );
-    // searchResults.value = req.items;
-    // isLoading.value = false;
-    setTimeout(() => {
-      searchResults.value = channelsListMock;
-      isLoading.value = false;
-    }, 400);
+    let req: any = await $fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${searchInput.value}&key=${config.public.GOOGLE_API_KEY}`
+    );
+    searchResults.value = req.items;
+    isLoading.value = false;
   }
 }
 </script>

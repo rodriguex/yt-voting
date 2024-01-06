@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { decodeHtml, formatDate, setScrollBody } from "~/helpers/functions";
-import { channelPageDataMock, channelVideosMock } from "./../../mock";
 
 const config = useRuntimeConfig();
 const id = useRoute().params.id;
@@ -44,15 +43,10 @@ onMounted(async () => {
       }
     }
     await getWeeks();
-    // await getChannelData();
-    // await getChannelStats();
-    // await getChannelVideos();
+    await getChannelData();
+    await getChannelStats();
+    await getChannelVideos();
     await getChannelVotes();
-    setTimeout(() => {
-      channelData.value = channelPageDataMock;
-      channelVideos.value = channelVideosMock;
-      isLoading.value = false;
-    }, 400);
   } catch (err) {
     return err;
   }
