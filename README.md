@@ -1,6 +1,6 @@
-# Nuxt 3 Minimal Starter
+## About
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A site where users can vote for the best youtuber of the week. Each week the leaderboard resets. Users can search for their channels, see some details in the channels page and vote. This site was created to be part of my portfolio of projects where I showcase my skills at programming.
 
 ## Setup
 
@@ -31,33 +31,3 @@ pnpm run dev
 # yarn
 yarn dev
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
