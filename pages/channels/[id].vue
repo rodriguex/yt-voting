@@ -347,7 +347,7 @@ function confirmVote() {
             @click="setupModal(video)"
           >
             <div
-              class="relative w-full md:w-[480px] rounded-t-lg h-[204px]"
+              class="relative w-[350px] md:w-[480px] rounded-t-lg h-[204px]"
               :style="`background: url('${video.snippet.thumbnails.high.url}') center no-repeat`"
             ></div>
             <div
@@ -366,7 +366,7 @@ function confirmVote() {
             </div>
             <div class="flex flex-col gap-1 px-3 pb-4">
               <span
-                class="max-w-[400px] font-bold text-xl line-clamp-2 overflow-hidden"
+                class="max-w-[300px] font-bold text-xl line-clamp-2 overflow-hidden"
                 >{{ decodeHtml(video.snippet.title) }}</span
               >
               <span class="mt-3 absolute bottom-5"

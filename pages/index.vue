@@ -35,6 +35,8 @@ onMounted(async () => {
     if (userVotes > 0) {
       alreadyVoted.value = true;
       navigateTo("/alreadyVoted");
+    } else {
+      alreadyVoted.value = false;
     }
   }
 
