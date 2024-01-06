@@ -198,7 +198,7 @@ function setModal(value: boolean) {
           <div class="flex items-center flex-col">
             <span
               v-if="d.position === 1"
-              class="italic font-bold text-xl text-gray-600 font-gloria mb-3"
+              class="italic text-xl text-gray-600 mb-3"
               >best youtuber of the week!</span
             >
             <img
