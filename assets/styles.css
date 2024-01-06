@@ -10,6 +10,7 @@ body,
 
 body {
   background: #dfdfdf2b;
+  overflow: hidden;
 }
 
 .crazyBg {
