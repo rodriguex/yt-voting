@@ -347,7 +347,7 @@ function confirmVote() {
             @click="setupModal(video)"
           >
             <div
-              class="relative w-[350px] md:w-[480px] rounded-t-lg h-[204px]"
+              class="relative w-[300px] md:w-[480px] rounded-t-lg h-[204px]"
               :style="`background: url('${video.snippet.thumbnails.high.url}') center no-repeat`"
             ></div>
             <div
