@@ -29,7 +29,7 @@ export const useAllStore = defineStore("all", () => {
 
     let lDayFull = `${ldYear}-${ldMonth.toString().padStart(2, "0")}-${ldDay
       .toString()
-      .padStart(2, "0")} 23:59:00`;
+      .padStart(2, "0")} 23:59:59`;
 
     try {
       let getActiveWeek: any = await supabase
