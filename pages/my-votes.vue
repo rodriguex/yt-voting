@@ -2,41 +2,32 @@
 import { formatDate } from "~/helpers/functions";
 
 const allStore = useAllStore();
-const { user, activeWeek, isLoading } = storeToRefs(allStore);
+const { user, activeWeek, isLoading, prevWeeks } = storeToRefs(allStore);
 
 const supabase = useSupabaseClient();
 const votes = ref<any>([]);
 const filteredVotes = ref<any>([]);
 const weekInput = ref<any>(null);
-const allPrevWeeks = ref<any>([]);
 
 onMounted(async () => {
   if (!activeWeek.value) {
     await allStore.getActiveWeek();
   }
 
+  if (!prevWeeks.value.length) {
+    await allStore.getPrevWeeks();
+  }
+
   isLoading.value = true;
   try {
-    let weeksReq = await supabase
-      .from("weeks")
-      .select("*")
-      .lte("beginning", activeWeek.value?.beginning)
+    let req = await supabase
+      .from("votes")
+      .select("*, weeks (id, beginning, ending)")
+      .eq("user_id", user.value?.id)
       .order("id", { ascending: false });
 
-    allPrevWeeks.value = weeksReq.data;
-
-    try {
-      let req = await supabase
-        .from("votes")
-        .select("*, weeks (id, beginning, ending)")
-        .eq("user_id", user.value?.id)
-        .order("id", { ascending: false });
-
-      votes.value = req.data;
-      filteredVotes.value = req.data;
-    } catch (err) {
-      return err;
-    }
+    votes.value = req.data;
+    filteredVotes.value = req.data;
   } catch (err) {
     return err;
   }
@@ -63,7 +54,7 @@ function filterVotesHistory() {
           @change="filterVotesHistory"
         >
           <option :value="null" disabled>Choose an option</option>
-          <option v-for="week in allPrevWeeks" :key="week.id" :value="week">
+          <option v-for="week in prevWeeks" :key="week.id" :value="week">
             {{ `${formatDate(week.beginning)} / ${formatDate(week.ending)}` }}
           </option>
         </select>

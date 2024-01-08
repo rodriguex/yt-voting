@@ -15,6 +15,7 @@ const {
   activeWeek,
   alreadyVoted,
   isLoading,
+  isCountdownOver,
 } = storeToRefs(allStore);
 
 onMounted(async () => {
@@ -46,6 +47,12 @@ onMounted(async () => {
 watch(searchInput, () => {
   if (!searchInput.value) {
     searchResults.value = [];
+  }
+});
+
+watchEffect(() => {
+  if (isCountdownOver.value) {
+    showModal.value = false;
   }
 });
 

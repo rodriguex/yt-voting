@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 const router = useRoute();
 const allStore = useAllStore();
-const { user } = storeToRefs(allStore);
+const { user, activeWeek } = storeToRefs(allStore);
 const userMenu = ref(false);
 
 async function logout() {
   localStorage.removeItem("user");
   user.value = null;
+  activeWeek.value = null;
   navigateTo("/login");
 }
 </script>

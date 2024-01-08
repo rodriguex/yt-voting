@@ -4,12 +4,12 @@ import { formatDate, setScrollBody } from "~/helpers/functions";
 const supabase = useSupabaseClient();
 
 const allStore = useAllStore();
-const { activeWeek, isLoading } = storeToRefs(allStore);
+const { activeWeek, isLoading, isCountdownOver, prevWeeks } =
+  storeToRefs(allStore);
 
 const weekVotes = ref<any>([]);
 const showModal = ref(false);
 const weekInput = ref<any>(null);
-const allPrevWeeks = ref<any>([]);
 const filteredVotes = ref<any>([]);
 
 onMounted(async () => {
@@ -22,18 +22,20 @@ onMounted(async () => {
   if (!activeWeek.value) {
     await allStore.getActiveWeek();
   }
+  if (!prevWeeks.value.length) {
+    await allStore.getPrevWeeks();
+  }
 
   weekInput.value = activeWeek.value;
   await getActiveWeekVotes();
 
-  let req = await supabase
-    .from("weeks")
-    .select("*")
-    .lte("beginning", activeWeek.value.beginning)
-    .order("id", { ascending: false });
-
-  allPrevWeeks.value = req.data;
   isLoading.value = false;
+});
+
+watchEffect(() => {
+  if (isCountdownOver.value) {
+    showModal.value = false;
+  }
 });
 
 async function getActiveWeekVotes() {
@@ -175,7 +177,7 @@ function setModal(value: boolean) {
           @change="getActiveWeekVotes"
         >
           <option value="" disabled>Choose an option</option>
-          <option v-for="week in allPrevWeeks" :key="week.id" :value="week">
+          <option v-for="week in prevWeeks" :key="week.id" :value="week">
             {{ `${formatDate(week.beginning)} / ${formatDate(week.ending)}` }}
           </option>
         </select>

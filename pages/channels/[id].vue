@@ -9,7 +9,6 @@ const channelData = ref<any>(null);
 const channelVideos = ref<any>([]);
 const channelHistory = ref<any>(null);
 
-const weekList = ref<any>([]);
 const weekInput = ref<any>(null);
 const showMoreText = ref(false);
 
@@ -18,7 +17,7 @@ const showVideoModal = ref(false);
 const currentVideoUrl = ref("");
 
 const allStore = useAllStore();
-const { user, vote, activeWeek, isLoading, alreadyVoted } =
+const { user, vote, activeWeek, isLoading, alreadyVoted, prevWeeks } =
   storeToRefs(allStore);
 
 onMounted(async () => {
@@ -33,6 +32,12 @@ onMounted(async () => {
       await allStore.getActiveWeek();
     }
 
+    if (!prevWeeks.value.length) {
+      await allStore.getPrevWeeks();
+    }
+
+    weekInput.value = activeWeek.value;
+
     if (alreadyVoted.value === null) {
       let userVotes = await allStore.getUserVotes(
         activeWeek.value.id,
@@ -42,7 +47,6 @@ onMounted(async () => {
         alreadyVoted.value = true;
       }
     }
-    await getWeeks();
     await getChannelData();
     await getChannelStats();
     await getChannelVideos();
@@ -52,20 +56,6 @@ onMounted(async () => {
   }
   isLoading.value = false;
 });
-
-async function getWeeks() {
-  try {
-    let req: any = await supabase
-      .from("weeks")
-      .select("*")
-      .lte("beginning", activeWeek.value.beginning)
-      .order("id", { ascending: false });
-    weekList.value = req.data;
-    weekInput.value = req.data[0];
-  } catch (err) {
-    return err;
-  }
-}
 
 async function getChannelData() {
   try {
@@ -394,7 +384,7 @@ function confirmVote() {
             @change="getChannelPosition"
           >
             <option :value="null" disabled>Select an option</option>
-            <option v-for="week in weekList" :key="week.id" :value="week">
+            <option v-for="week in prevWeeks" :key="week.id" :value="week">
               {{ `${formatDate(week.beginning)} / ${formatDate(week.ending)}` }}
             </option>
           </select>
