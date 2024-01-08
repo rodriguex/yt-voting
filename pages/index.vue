@@ -1,4 +1,12 @@
 <script lang="ts" setup>
+useSeoMeta({
+  title: "YT Voting",
+  ogTitle: "YT Voting",
+  description: "A site to vote in the best youtubers of the week!",
+  ogDescription: "A site to vote in the best youtubers of the week!",
+  robots: "follow, index",
+});
+
 import { setScrollBody } from "./../helpers/functions";
 
 const config = useRuntimeConfig();
@@ -27,7 +35,7 @@ onMounted(async () => {
   }
 
   if (alreadyVoted.value === true) {
-    navigateTo("/alreadyVoted");
+    // navigateTo("/alreadyVoted");
   } else if (alreadyVoted.value === null) {
     let userVotes = await allStore.getUserVotes(
       activeWeek.value.id,
@@ -35,7 +43,7 @@ onMounted(async () => {
     );
     if (userVotes > 0) {
       alreadyVoted.value = true;
-      navigateTo("/alreadyVoted");
+      // navigateTo("/alreadyVoted");
     } else {
       alreadyVoted.value = false;
     }

@@ -26,10 +26,6 @@ export default defineNuxtConfig({
       title: "YT Voting",
       meta: [
         {
-          name: "description",
-          content: "A site to vote in yours best youtubers!",
-        },
-        {
           name: "viewport",
           content:
             "width=device-width, initial-scale=1.0, height=device-height",
