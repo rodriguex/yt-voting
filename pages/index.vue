@@ -35,7 +35,7 @@ onMounted(async () => {
   }
 
   if (alreadyVoted.value === true) {
-    // navigateTo("/alreadyVoted");
+    navigateTo("/alreadyVoted");
   } else if (alreadyVoted.value === null) {
     let userVotes = await allStore.getUserVotes(
       activeWeek.value.id,
@@ -43,7 +43,7 @@ onMounted(async () => {
     );
     if (userVotes > 0) {
       alreadyVoted.value = true;
-      // navigateTo("/alreadyVoted");
+      navigateTo("/alreadyVoted");
     } else {
       alreadyVoted.value = false;
     }
