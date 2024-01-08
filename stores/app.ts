@@ -19,7 +19,7 @@ export const useAllStore = defineStore("all", () => {
   const countdownHour = ref<any>(null);
   const countdownMin = ref<any>(null);
   const countdownSec = ref<any>(null);
-  const isCountdownOver = ref(true);
+  const isCountdownOver = ref(false);
 
   async function getActiveWeek() {
     let today = new Date();
