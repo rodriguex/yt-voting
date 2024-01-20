@@ -89,7 +89,7 @@ export const useAllStore = defineStore("all", () => {
   }
 
   function countdown() {
-    if (activeWeek.value.ending) {
+    if (activeWeek.value?.ending) {
       let now = new Date();
       let evenDate = new Date(activeWeek.value.ending);
 
